@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="timer_summary_view" model="ir.ui.view">
+            <field name="name">wizard.calculate.timer</field>
+            <field name="model">wizard.calculate.timer</field>
+            <field name="arch" type="xml">
+          		<form string = "Wizard Form View" version="7.0">
+						This duration value does not include the time of the task which is being currently worked upon!
+						The time displayed is in hours and minutes 
+		          		<group>
+		          			<field name="total_time" readonly="1" widget="float_time"/>
+		          		</group>
+	                <footer>
+	                    <button string="Close" class="oe_link oe_highlight" special="cancel" />
+	                </footer>
+               </form>
+            </field>
+        </record>
+     </data>
+</openerp>

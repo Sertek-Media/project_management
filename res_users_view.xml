@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Viewing partner_id in res.users-->
+		<record id="inherit_partner_id_res_users" model="ir.ui.view">
+            <field name="name">Display Partner field</field>
+            <field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+				<xpath expr="/form/sheet/notebook/page[@string='Access Rights']" position="after">
+					<page string ="Ongoing Tasks &amp; Issues">
+						<group>
+							<field name="working_task"/>
+							<field name="task_name" readonly="1"/>
+						</group>
+						<group>
+							<field name="working_issue"/>
+							<field name="issue_name" readonly="1"/>
+						</group>
+					</page>
+				</xpath>
+			</field>
+		</record>
+	</data>	
+</openerp>

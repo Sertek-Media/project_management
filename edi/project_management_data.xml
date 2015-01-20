@@ -1,0 +1,310 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <!-- EDI related Email Templates menu -->
+        <record model="ir.actions.act_window" id="action_email_templates">
+            <field name="name">Email Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_template.email_template_tree" />
+            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="context" eval="{'search_default_model_id': ref('project_management.model_project_task')}"/>
+        </record>
+    </data>
+
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_edi_project_management" model="email.template">
+            <field name="name">Project Task - Send by Email</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">New Task ${object.name}</field>
+            <field name="email_recipients"></field>
+            <field name="model_id" ref="project_management.model_project_task"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+    <p>Dear ${object.user_id.name or ''}</p>
+    
+    <p>New task is assigned to you or your department.</p>
+
+    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+       &nbsp;&nbsp;<strong>Here are the Task Details:</strong><br />
+       &nbsp;&nbsp;Project: <strong>${object.project_id.name or ''}</strong><br />
+       &nbsp;&nbsp;Task name: <strong>${object.name or ''}</strong><br />
+       &nbsp;&nbsp;Planned hours: <strong>${object.planned_hours or ''}</strong><br />
+       &nbsp;&nbsp;Deadline: <strong>${object.date_deadline or ''}</strong><br />
+       &nbsp;&nbsp;Description: <strong>${object.description or ''}</strong><br />
+      ]]>	</field>
+ 		</record>     
+   </data>
+
+	<!--  Email Template for the Customer task-->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_edi_project_management_customer" model="email.template">
+            <field name="name">Project Task Customer Notification</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">New Task ${object.name}</field>
+            <field name="email_recipients"></field>
+            <field name="model_id" ref="project_management.model_project_task"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+	
+    <p>Dear ${object.project_id.partner_id.name or ''},</p>
+    
+    <p>New task is assigned to your project.</p>
+    <p>Here are the Task details:</p>
+
+    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+       &nbsp;&nbsp;Project: <strong>${object.project_id.name or ''}</strong><br />
+       &nbsp;&nbsp;Task summary: <strong>${object.name or ''}</strong><br />
+       &nbsp;&nbsp;Start Date: <strong>${object.date_start or ''}</strong><br />
+       &nbsp;&nbsp;Deadline: <strong>${object.date_end or ''}</strong><br />
+       &nbsp;&nbsp;Description: <strong>${object.description or ''}</strong><br />
+      	
+      ]]>	</field>
+      </record>
+	</data>
+	
+	<!--  Email Template for the Customer Project-->
+    <data noupdate="1">
+        <record id="email_template_edi_project_management_customer_project" model="email.template">
+            <field name="name">Project Notification for Customers</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">New Project ${object.name}</field>
+            <field name="email_recipients"></field>
+            <field name="model_id" ref="project_management.model_project_project"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+	
+    <p>Dear ${object.partner_id.name or ''} </p>
+    
+    <p>We have assigned new project to you or your company.</p>
+    <p>Here are the Project details:</p>
+
+    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+       &nbsp;&nbsp;Project: <strong>${object.name or ''}</strong><br />
+       &nbsp;&nbsp;Start Date: <strong>${object.date_start or ''}</strong><br />
+       &nbsp;&nbsp;Deadline: <strong>${object.date or ''}</strong><br />
+
+     <p>You will be notified about completion of the project, after it has been finished. Also you will be notified about all changes made to this project by our employees, so please add this e-mail address to your safe list address.</p>
+      	
+      ]]>	</field>
+      </record>
+	</data>     
+
+    <!--Email template for project_issue -->
+    <data noupdate="1">
+        <record id="email_template_edi_project_management_employee_issue" model="email.template">
+            <field name="name">Project Issue Notification for Employee</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">New Project ${object.name}</field>
+            <field name="email_recipients"></field>
+            <field name="model_id" ref="project_management.model_project_issue"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+    <p>Dear ${object.user_id.name or ''} </p>
+    <p><strong>New issue has been assigned to you, which needs your attention!</strong></p>
+    <p>Here are the Issue details:</p>
+    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+       &nbsp;&nbsp;Issue: <strong>${object.name or ''}</strong><br />
+       &nbsp;&nbsp;Task: <strong>${object.task_id.name or ''}</strong><br />
+       &nbsp;&nbsp;Project: <strong>${object.project_id.name or ''}</strong><br />
+       &nbsp;&nbsp;Priority: <strong>${object.priority or ''}</strong><br />
+       &nbsp;&nbsp;Description: <strong>${object.description or ''}</strong><br />
+    <p>As soon as you will be available, please take a look at the issue assigned to you and try fixing it, so the customers would be satisfied!</p>
+      ]]></field>
+      </record>
+   </data>
+
+    <!--Email template for project task close message for customer -->
+    <data noupdate="1">
+        <record id="email_template_edi_project_management_task_close_message" model="email.template">
+            <field name="name">Project Task Close Message</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">Task ${object.name} closed</field>
+            <field name="email_recipients"></field>
+            <field name="model_id" ref="project_management.model_project_task"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+	
+    <p>Dear ${object.partner_id.name or ''} </p>
+    
+    <p>Your project <strong>${object.project_id.name or ''}</strong> task <strong>${object.name or ''}</strong>has been closed.</p>
+    <p>If you have any questions about task completion details or spent hours, please contact your account manager <strong><a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.project_id.partner_id.user_id.name or 'Administrator'}</a></strong>
+    
+<br/>
+    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
+    <br/>
+    <br/>
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
+            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
+    </div>
+    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
+        % if object.company_id.street:
+            ${object.company_id.street}<br/>
+        % endif
+        % if object.company_id.street2:
+            ${object.company_id.street2}<br/>
+        % endif
+        % if object.company_id.city or object.company_id.zip:
+            ${object.company_id.zip} ${object.company_id.city}<br/>
+        % endif
+        % if object.company_id.country_id:
+            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        % endif
+        </span>
+        % if object.company_id.phone:
+            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
+                Phone:&nbsp; ${object.company_id.phone}
+            </div>
+        % endif
+        % if object.company_id.website:
+            <div>
+                Web:&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
+            </div>
+        % endif
+        <p></p>
+    </div>
+</div>
+      ]]></field>
+      </record>
+   </data>
+
+    <!--Email template for project  close message for customer -->
+    <data noupdate="1">
+        <record id="email_template_edi_project_management_project_close_message" model="email.template">
+            <field name="name">Project  Close Message for Customer</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">Project ${object.name} closed</field>
+            <field name="email_recipients"></field>
+            <field name="model_id" ref="project_management.model_project_project"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+	
+    <p>Dear ${object.partner_id.name or ''} </p>
+    
+    <p>We have finished working on your project <strong>${object.name or ''}</strong></p>
+    <p>We hope, you where satisfied with our delivered software or services, and hope doing business in the near future.</p>
+    <p>If you will have any questions, don’t hesitate to contact your account manager <strong>${object.partner_id.user_id.name or 'Administrator'}</strong>
+    
+<br/>
+    <p>If you have any question, do not hesitate to contact us.</p>
+    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
+    <br/>
+    <br/>
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
+            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
+    </div>
+    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
+        % if object.company_id.street:
+            ${object.company_id.street}<br/>
+        % endif
+        % if object.company_id.street2:
+            ${object.company_id.street2}<br/>
+        % endif
+        % if object.company_id.city or object.company_id.zip:
+            ${object.company_id.zip} ${object.company_id.city}<br/>
+        % endif
+        % if object.company_id.country_id:
+            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        % endif
+        </span>
+        % if object.company_id.phone:
+            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
+                Phone:&nbsp; ${object.company_id.phone}
+            </div>
+        % endif
+        % if object.company_id.website:
+            <div>
+                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
+            </div>
+        % endif
+        <p></p>
+    </div>
+</div>
+
+      ]]></field>
+      </record>
+   </data>
+
+    <!--Email template for issue  close message for customer -->
+    <data noupdate="1">
+        <record id="email_template_edi_project_management_issue_close_message" model="email.template">
+            <field name="name">Issue  Close Message for Customer</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">Issue ${object.name} closed</field>
+            <field name="email_recipients"></field>
+            <field name="model_id" ref="project_management.model_project_issue"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+	
+    <p>Dear ${object.partner_id.name or ''} </p>
+    
+    <p>Your issue <strong>${object.project_id.name or ''}</strong> has been resolved.</p>
+    <p>If you have any questions about issue completion details or spent hours, please contact your account manager <strong><a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.partner_id.user_id.name or 'Administrator'}</a></strong>
+    
+<br/>
+    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
+    <br/>
+    <br/>
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;">
+            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
+    </div>
+    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
+        % if object.company_id.street:
+            ${object.company_id.street}<br/>
+        % endif
+        % if object.company_id.street2:
+            ${object.company_id.street2}<br/>
+        % endif
+        % if object.company_id.city or object.company_id.zip:
+            ${object.company_id.zip} ${object.company_id.city}<br/>
+        % endif
+        % if object.company_id.country_id:
+            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        % endif
+        </span>
+        % if object.company_id.phone:
+            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
+                Phone:&nbsp; ${object.company_id.phone}
+            </div>
+        % endif
+        % if object.company_id.website:
+            <div>
+                Web:&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
+            </div>
+        % endif
+        <p></p>
+    </div>
+</div>
+      ]]></field>
+      </record>
+   </data>
+   
+</openerp>

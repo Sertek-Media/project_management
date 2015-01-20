@@ -1,0 +1,844 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* project_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0-20130901-231054\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-12 18:15+0000\n"
+"PO-Revision-Date: 2014-06-12 18:15+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: project_management
+#: field:project.issue,user_start:0
+#: field:project.issue.time.recorder,connect:0
+#: field:project.task,user_start:0
+#: field:project.task.time.recorder,connect:0
+msgid "unknown"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Extra Info"
+msgstr ""
+
+#. module: project_management
+#: selection:project.issue,timer_state:0
+#: selection:project.task,timer_state:0
+msgid "Timer Stopped"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Statistics"
+msgstr ""
+
+#. module: project_management
+#: selection:project.issue,timer_state:0
+#: selection:project.task,timer_state:0
+msgid "Timer Started"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_project_issue
+msgid "Project Issue"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Add an internal note..."
+msgstr ""
+
+#. module: project_management
+#: model:email.template,body_html:project_management.email_template_edi_project_management_customer_project
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"	\n"
+"    <p>Dear ${object.partner_id.name or ''} </p>\n"
+"    \n"
+"    <p>We have assigned new project to you or your company.</p>\n"
+"    <p>Here are the Project details:</p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;Project: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Start Date: <strong>${object.date_start or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Deadline: <strong>${object.date or ''}</strong><br />\n"
+"\n"
+"     <p>You will be notified about completion of the project, after it has been finished. Also you will be notified about all changes made to this project by our employees, so please add this e-mail address to your safe list address.</p>\n"
+"      	\n"
+"      	"
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<br/>\n"
+"    <p>Gerb. ${object.partner_id.name or ''} </p>\n"
+"<br/>\n"    
+"    <p>Mes priskyrėme jums ar jūsų įmonei naują projektą, kurį galite stebėti mūsų ERP sistemoje</p>\n"
+"    <p>Žemiau pateikiame Jums projekto detales:</p>\n"
+"<br/>\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;Projektas: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Projekto pradžia: <strong>${object.date_start or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Projekto pabaiga: <strong>${object.date or ''}</strong><br />\n"
+"<br/>\n"       
+"     <p>Jūs gausite pakartotiną žinutę, kuomet jūsų projektas bus užbaigtas, taip pat gausite visus su projektu susijusius pranešimus, todėl prašome šį siuntėją priskirti prie leistinų elektroninių adresatų sąrašo</p>\n"
+"      	\n"
+"      	"
+
+#. module: project_management
+#: view:project.task:0
+msgid "Assign me the task"
+msgstr ""
+
+#. module: project_management
+#: field:res.users,task_name:0
+msgid "Working on Task"
+msgstr ""
+
+#. module: project_management
+#: model:email.template,subject:project_management.email_template_edi_project_management_issue_close_message
+msgid "Issue ${object.name} closed"
+msgstr ""
+
+#. module: project_management
+#: model:email.template,subject:project_management.email_template_edi_project_management
+#: model:email.template,subject:project_management.email_template_edi_project_management_customer
+msgid "New Task ${object.name}"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_project_task
+#: view:project.task:0
+msgid "Task"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue.time.recorder,difference_time:0
+#: field:project.task.time.recorder,difference_time:0
+msgid "Effective Hours Worked"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+#: view:project.task:0
+msgid "Project Timer Lines Recorder"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Work Summary"
+msgstr ""
+
+#. module: project_management
+#: selection:project.task,assign_to_choice:0
+#: field:project.task,department_id:0
+msgid "Department"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+#: view:project.task:0
+msgid "Check task Summary"
+msgstr ""
+
+#. module: project_management
+#: view:wizard.calculate.timer:0
+msgid "This duration value does not include the time of the task which is being currently worked upon!\n"
+"						The time displayed is in hours and minutes"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Issue"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Remaining"
+msgstr ""
+
+#. module: project_management
+#: field:res.users,issue_name:0
+msgid "Working on Issue"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Status"
+msgstr ""
+
+#. module: project_management
+#: view:project.project:0
+msgid "red:effective_hours > planned_hours;red:date and (date<current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "onchange_dept_check(assign_to_choice,user_id,id,department_id)"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue,last_work_summary_added_id:0
+#: field:project.task,last_work_summary_added_id:0
+msgid "Last Work Summary Line ID"
+msgstr ""
+
+#. module: project_management
+#: model:email.template,subject:project_management.email_template_edi_project_management_project_close_message
+msgid "Project ${object.name} closed"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+#: view:project.task:0
+msgid "Description"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Task Work"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Status :Stop"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Status: Stop"
+msgstr ""
+
+#. module: project_management
+#: model:email.template,subject:project_management.email_template_edi_project_management_customer_project
+#: model:email.template,subject:project_management.email_template_edi_project_management_employee_issue
+msgid "New Project ${object.name}"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue.time.recorder,start_time:0
+#: field:project.task.time.recorder,start_time:0
+msgid "Start Time"
+msgstr ""
+
+#. module: project_management
+#: model:ir.actions.act_window,name:project_management.action_email_templates
+msgid "Email Templates"
+msgstr ""
+
+#. module: project_management
+#: model:ir.actions.act_window,name:project_management.custom_action_view_task_user
+#: model:ir.ui.menu,name:project_management.menu_action_view_task_custom_user
+msgid "Track Tasks & Progress"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Issue Summary"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Status :Start"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue,timer_lines:0
+#: field:project.task,timer_lines:0
+msgid "Time Lines"
+msgstr ""
+
+#. module: project_management
+#: model:email.template,body_html:project_management.email_template_edi_project_management_customer
+msgid "\n"
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"	\n"
+"    <p>Dear ${object.project_id.partner_id.name or ''},</p>\n"
+"    \n"
+"    <p>New task is assigned to your project.</p>\n"
+"    <p>Here are the Task details:</p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;Project: <strong>${object.project_id.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Task summary: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Start Date: <strong>${object.date_start or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Deadline: <strong>${object.date_end or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Description: <strong>${object.description or ''}</strong><br />\n"
+"      	\n"
+"      	"
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;\">\n"
+"<br/>\n"	
+"    <p>Gerb. ${object.partner_id.name or ''} </p>\n"
+"<br/>\n"    
+"    <p>Mes priskyrėme jums ar jūsų įmonei naują projektą, kurį galite stebėti mūsų ERP sistemoje</p>\n"
+"    <p>Žemiau pateikiame Jums projekto detales:</p>\n"
+"<br/>\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;Projektas: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Projekto pradžia: <strong>${object.date_start or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Projekto pabaiga: <strong>${object.date or ''}</strong><br />\n"
+"<br/>\n"       
+"     <p>Jūs gausite pakartotiną žinutę, kuomet jūsų projektas bus užbaigtas, taip pat gausite visus su projektu susijusius pranešimus, todėl prašome šį siuntėją priskirti prie leistinų elektroninių adresatų sąrašo</p>\n"
+"      	\n"
+"      	"
+
+#. module: project_management
+#: model:email.template,body_html:project_management.email_template_edi_project_management_project_close_message
+msgid "\n"
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"	\n"
+"    <p>Dear ${object.partner_id.name or ''} </p>\n"
+"    \n"
+"    <p>We have finished working on your project <strong>${object.name or ''}</strong></p>\n"
+"    <p>We hope, you where satisfied with our delivered software or services, and hope doing business in the near future.</p>\n"
+"    <p>If you will have any questions, don’t hesitate to contact your account manager <strong>${object.partner_id.user_id.name or 'Administrator'}</strong>\n"
+"    \n"
+"<br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        % endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"\n"
+"      "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \" > \n"
+"	\n"
+"    <p>Gerb. ${object.partner_id.name or ''} </p>\n"
+"    <p>Jūsų projektas <strong>${object.name or ''} užbaigtas</strong></p>\n"
+"    <p>Mes tikimės, jog esate patenkinti mūsų suteiktomis paslaugomis ar sukurtomis programinėmis įrangomis ir norime su jumis netolimoje ateityje pratęsti mūsų bendradarbiavimą.</p>\n"
+"    <p>Jei jums kils klausimų, nedvejodami kreipkitės į jus aptarnaujantį vadybininką <strong><a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.partner_id.user_id.name or 'Administrator'}</a></strong>\n"
+"<br/>\n"
+"    <p>Ačiū, kad renkatės ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Telefonas:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Svetainė :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        % endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"\n"
+"      "
+
+#. module: project_management
+#: view:res.users:0
+msgid "Ongoing Tasks & Issues"
+msgstr ""
+
+#. module: project_management
+#: model:ir.actions.act_window,help:project_management.action_issue_portal_user
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new Issue.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project_management
+#: model:email.template,body_html:project_management.email_template_edi_project_management_task_close_message
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"	\n"
+"    <p>Dear ${object.partner_id.name or ''} </p>\n"
+"    \n"
+"    <p>Your project <strong>${object.project_id.name or ''}</strong> task <strong>${object.name or ''}</strong>has been closed.</p>\n"
+"    <p>If you have any questions about task completion details or spent hours, please contact your account manager <strong><a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.project_id.partner_id.user_id.name or 'Administrator'}</a></strong>\n"
+"    \n"
+"<br/>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        % endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"      "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>Gerb. ${object.partner_id.name or ''} </p>\n"
+"    <p>Jūsų projekto <strong>${object.project_id.name or ''}</strong> užduotis <strong>${object.name or ''}</strong>užbaigta</p>\n"
+"    <p>Jei turite klausimų dėl užduoties atlikimo ar dirbtų valandų skaičiaus kreipkitės į jus aptarnaujantį vadybininką <strong><a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.project_id.partner_id.user_id.name or 'Administrator'}</a></strong>\n"
+"<br/>\n"
+"    <p>Ačiū, kad renkatės ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px;\">\n"
+"                Telefonas:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Svetainė:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        % endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+""
+
+#. module: project_management
+#: selection:project.task,assign_to_choice:0
+msgid "User"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue,is_send_mail:0
+msgid "Dispatch mail after Issue Creation"
+msgstr ""
+
+#. module: project_management
+#: field:project.task,start_datetime:0
+msgid "Starting Time & Date"
+msgstr ""
+
+#. module: project_management
+#: field:res.users,working_issue:0
+msgid "is Working on Issue"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Done"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Send Mail"
+msgstr ""
+
+#. module: project_management
+#: field:wizard.calculate.timer,total_time:0
+msgid "Time Summary"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+#: view:project.task:0
+msgid "Start Timer"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue.time.recorder,stop_time:0
+#: field:project.task.time.recorder,stop_time:0
+msgid "Stop Time"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_wizard_calculate_timer
+msgid "Displays the total work summary"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Task Summary"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_project_project
+#: view:project.task:0
+msgid "Project"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Issue Timer Summary"
+msgstr ""
+
+#. module: project_management
+#: field:project.task,assign_to_choice:0
+msgid "Assign To User/Department"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+#: view:project.task:0
+msgid "Stop Timer"
+msgstr ""
+
+#. module: project_management
+#: view:wizard.calculate.timer:0
+msgid "Wizard Form View"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "[('timer_state','=','start')]"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_project_task_time_recorder
+msgid "Project task Time Recorder Line"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: project_management
+#: model:email.template,body_html:project_management.email_template_edi_project_management_issue_close_message
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"	\n"
+"    <p>Dear ${object.partner_id.name or ''} </p>\n"
+"    \n"
+"    <p>Your issue <strong>${object.project_id.name or ''}</strong> has been resolved.</p>\n"
+"    <p>If you have any questions about issue completion details or spent hours, please contact your account manager <strong><a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.partner_id.user_id.name or 'Administrator'}</a></strong>\n"
+"    \n"
+"<br/>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        % endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"      "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;\">\n"
+"    <p>Gerb. ${object.partner_id.name or ''} </p>\n"
+"    <p>Jūsų problema <strong>${object.project_id.name or ''}</strong> yra išspręsta.</p>\n"
+"    <p>Jei turite klausimų dėl užduoties atlikimo ar dirbtų valandų skaičiaus kreipkitės į jus aptarnaujantį vadybininką <strong><ref=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.partner_id.user_id.name or 'Administrator'}</a></strong>\n"
+"   <br/>\n"
+"   <p>Ačiū, kad renkatės ${object.company_id.name or 'us'}!</p>\n"
+"<br/>\n"
+"<br/>\n"
+"<div style=\"width:375px; margin: 0px; padding: 0px; background-color: #8E0000;border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px;background-repeat: repeat no-repeat;\">\n"
+"<h3 style=\"margin:0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"</div>\n"
+"<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"<span style=\"color: #222; margin-bottom: 5px; display: block;\">\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street}<br/>\n"
+" %endif\n"
+" % if object.company_id.street2:\n"
+"	${object.company_id.street2}<br/>\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"	${object.company_id.zip} ${object.company_id.city}<br/>\n"
+" %endif\n"
+"% if object.company_id.country_id:\n"
+"      ${object.company_id.state_id and ('%s, ' %object.company_id.state_id.name) or ''}\n"
+"       ${object.company_id.country_id.name or ''}<br/>\n"
+" % endif\n"
+"</span>\n"
+" % if object.company_id.phone:\n"
+" <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0pxargin-left: 0px; padding-top: 0px; padding-right: 0pxadding-bottom: 0px; padding-left: 0px; \">\n"
+"    Telefonas:&nbsp; ${object.company_id.phone}\n"
+"</div>\n"
+"% endif\n"
+" % if object.company_id.website:\n"
+"<div> Svetainė:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a></div>\n"
+"% endif\n"
+"<p></p>\n"
+"</div>\n"
+"</div>\n"
+"      "
+
+#. module: project_management
+#: field:res.users,working_task:0
+msgid "is Working on Task"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue,timer_state:0
+#: field:project.task,timer_state:0
+msgid "Timer"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Task summary..."
+msgstr ""
+
+#. module: project_management
+#: model:ir.actions.act_window,help:project_management.custom_action_view_task_user
+msgid "<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new task.\n"
+"              </p><p>\n"
+"                OpenERP's project management allows you to manage the pipeline\n"
+"                of tasks in order to get things done efficiently. You can\n"
+"                track progress, discuss on tasks, attach documents, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "{'required':[('assign_to_choice','=','users')],'readonly':[('state','in',['done', 'cancelled'])]}"
+msgstr ""
+
+#. module: project_management
+#: view:project.issue:0
+msgid "Status: Start"
+msgstr ""
+
+#. module: project_management
+#: model:email.template,body_html:project_management.email_template_edi_project_management_employee_issue
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"    <p>Dear ${object.user_id.name or ''} </p>\n"
+"    <p><strong>New issue has been assigned to you, which needs your attention!</strong></p>\n"
+"    <p>Here are the Issue details:</p>\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;Issue: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Task: <strong>${object.task_id.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Project: <strong>${object.project_id.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Priority: <strong>${object.priority or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Description: <strong>${object.description or ''}</strong><br />\n"
+"    <p>As soon as you will be available, please take a look at the issue assigned to you and try fixing it, so the customers would be satisfied!</p>\n"
+"      "
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;\">"
+"<br/>\n"
+"    <p>Gerb. ${object.user_id.name or ''}</p>\n"
+"<br/>\n"    
+"    <p><strong>Jums sukurta nauja problema, kuri reikalauja jūsų dėmesio!</strong></p>\n"
+"    <p>Probleminės užduoties parametrai sekantys:</p>\n"
+"<br/>\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;Pavadinimas: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Susijusi užduotis: <strong>${object.task_id.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Susijęs projektas: <strong>${object.project_id.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Teikiamos pirmenybės lygis: <strong>${object.priority or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Problemos aprašymas: <strong>${object.description or ''}</strong><br />\n"
+"<br/>\n"
+"   <p>Kai tik rasite laisvą minutę, prašome nedelsiant sutvarkyti iškilusią problemą, kad mūsų klientai liktų patenkinti!</p>\n"
+"      "
+
+#. module: project_management
+#: model:email.template,body_html:project_management.email_template_edi_project_management
+msgid "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Dear ${object.user_id.name or ''},</p>\n"
+"    \n"
+"    <p>New task is assigned to you or your department.</p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>Here are the Task Details:</strong><br />\n"
+"       &nbsp;&nbsp;Project: <strong>${object.project_id.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Task name: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Planned hours: <strong>${object.planned_hours or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Deadline: <strong>${object.date_deadline or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Description: <strong>${object.description or ''}</strong><br />\n"
+"      	"
+msgstr "\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;\">\n"
+"<br/>\n"
+"    <p>Gerb. ${object.user_id.name or ''}</p>\n"
+"<br/>\n"    
+"    <p>Jums priskirta nauja užduotis.</p>\n"
+"<br/>\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>Užduoties parametrai sekantys:</strong><br />\n"
+"       &nbsp;&nbsp;Projektas: <strong>${object.project_id.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Užduoties trumpas aprašymas: <strong>${object.name or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Viso leistinų valandų: <strong>${object.planned_hours or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Užduotis turi būti atlikta iki: <strong>${object.date_deadline or ''}</strong><br />\n"
+"       &nbsp;&nbsp;Pilnas aprašymas: <strong>${object.description or ''}</strong><br />\n"
+"      	"
+
+#. module: project_management
+#: model:email.template,subject:project_management.email_template_edi_project_management_task_close_message
+msgid "Task ${object.name} closed"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr ""
+
+#. module: project_management
+#: view:project.project:0
+msgid "Projects"
+msgstr ""
+
+#. module: project_management
+#: constraint:project.task:0
+msgid "Error! task start-date or end-date must be between the project dates or the task dates have not been entered"
+msgstr ""
+
+#. module: project_management
+#: field:project.project,is_send_mail:0
+msgid "Dispatch Mail After Project Creation ?"
+msgstr ""
+
+#. module: project_management
+#: view:wizard.calculate.timer:0
+msgid "Close"
+msgstr ""
+
+#. module: project_management
+#: field:project.issue.time.recorder,started_by:0
+#: field:project.task.time.recorder,started_by:0
+msgid "Started By"
+msgstr ""
+
+#. module: project_management
+#: model:ir.model,name:project_management.model_project_issue_time_recorder
+msgid "Project issue Time Recorder Line"
+msgstr ""
+
+#. module: project_management
+#: model:ir.actions.act_window,name:project_management.action_issue_portal_user
+#: model:ir.ui.menu,name:project_management.menu_portal_user_issue
+msgid "Issues"
+msgstr ""
+
+#. module: project_management
+#: view:project.task:0
+msgid "Assigned To/Volunteer"
+msgstr ""
+

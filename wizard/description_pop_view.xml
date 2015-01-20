@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="description_pop_view" model="ir.ui.view">
+            <field name="name">Description Pop up</field>
+            <field name="model">description.pop</field>
+            <field name="arch" type="xml">
+          		<form string = "Wizard Form View" version="7.0">
+		          		<group>
+		          			<field name="desc" required = "1"/>
+		          		</group>
+	                <footer>
+	                	<button string = "Ok" name = "timer_state_stop" type="object"/>
+	                </footer>
+               </form>
+            </field>
+        </record>
+        <record id="description_pop_view_start" model="ir.ui.view">
+            <field name="name">Description Pop up</field>
+            <field name="model">description.pop</field>
+            <field name="arch" type="xml">
+          		<form string = "Wizard Form View" version="7.0">
+		          		<group>
+			          		<div>
+		          				<field name = 'work_name' class = 'oe_inline' readonly = '1'/> of type 
+		          				"<field name = 'type' class = 'oe_inline' readonly='1' />"  is still opened. Please enter the description for it.			          		
+			          		</div>
+		          		</group>
+		          		<group>
+		          			<field name="desc" required = "1"/>
+		          		</group>
+	                <footer>
+	                	<button string = "Ok" name = "timer_state_start" type="object"/>
+	                </footer>
+               </form>
+            </field>
+        </record>       
+
+        <record id="description_pop_view_signout" model="ir.ui.view">
+            <field name="name">Description Pop Up</field>
+            <field name="model">description.pop</field>
+            <field name="arch" type="xml">
+          		<form string = "Wizard Form View" version="7.0">
+		          		<group>
+			          		<div>
+		          				<field name = 'work_name' class = 'oe_inline' readonly = '1'/> of type 
+		          				"<field name = 'type' class = 'oe_inline' readonly='1' />"  is still opened. Please enter the description for it.			          		
+			          		</div>
+		          		</group>
+		          		<group>
+		          			<field name="desc" required = "1"/>
+		          		</group>
+	                <footer>
+	                	<button string = "Ok" name = "timer_state_stop" type="object"/>
+	                </footer>
+               </form>
+            </field>
+        </record>       
+        
+     </data>
+</openerp>

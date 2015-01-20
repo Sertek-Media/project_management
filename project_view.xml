@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id ="done_state_adds" model ="ir.ui.view">
+			<field name = "name">Adding fields</field>
+			<field name = "model">project.task.type</field>
+			<field name = "inherit_id" ref="project.task_type_edit"/>
+			<field name = "arch" type="xml">
+				<xpath expr = "/form/group/group/field[@name ='sequence']" position = "after">
+					<field name = "done_state"/>					
+				</xpath>
+			</field>
+		</record>
+		
+		<!--  <record id="change_search_view_my_tasks" model="ir.ui.view">
+            <field name="name">Changing the search view</field>
+            <field name="model">project.task</field>
+			<field name="inherit_id" ref="project_gtd.view_task_gtd_search"/>
+            <field name="arch" type="xml">
+				<xpath expr = "/search/filter[@name='open']" position="attributes">
+					<attribute name="domain">[('timer_state','=','start')]</attribute>
+				</xpath>
+            </field>
+        </record>-->
+
+	    <record id="project_gtd.view_task_gtd_search" model="ir.ui.view">
+	        <field name="name">project.task.search.inherit</field>
+	        <field name="model">project.task</field>
+	        <field name="inherit_id" ref="project.view_task_search_form"/>
+	        <field name="arch" type="xml">
+	            <filter name="message_unread" position="after">
+	                <group string="Timebox">
+	                    <separator name="gtdsep"/>
+	                </group>
+	            </filter>
+	            <filter string="Last Message" position="after">
+	                <filter name = "open" string = "Open" domain = "[('timer_state','=','start')]"/>
+	                <filter name="timebox_id" string="Timebox" domain="[]" context="{'group_by': 'timebox_id'}"/>
+	                <filter name="context_id" string="Context" domain="[]" context="{'group_by': 'context_id'}"/>
+	            </filter>
+	        </field>
+	    </record>        
+        
+    <record model="ir.actions.act_window" id="project_gtd.open_gtd_task">
+            <field name="name">My Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="search_view_id" ref="project_gtd.view_task_gtd_search"/>
+            <field name="context">{'set_editable':True,'set_visible':False,'gtd':True,'user_invisible':True}</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
+    </record>
+    <menuitem action="project_gtd.open_gtd_task" id="project_gtd.menu_open_gtd_timebox_tree" parent="project.menu_project_management" sequence="10"/>
+        
+        
+		<!-- Changing project.task kanban view-->
+		<record id="change_project_task_kanban_view" model="ir.ui.view">
+            <field name="name">Project Task Timer Functionality</field>
+            <field name="model">project.task</field>
+			<field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="arch" type="xml">
+				<field name="sequence" position="after">
+        			<field name="timer_state"/>				
+				</field>
+        		<xpath expr = "//div[contains(@class, 'oe_kanban_bottom_right')]" position="replace" >
+	                <div class="oe_kanban_bottom_right">
+	                    <t groups="base.group_user">
+	                        <a t-if="record.timer_state.raw_value === 'stop'" type="object"  string="Status :Stopped"   name="desc_pop_start" class="oe_kanban_status"  > </a>
+	                        <a t-if="record.timer_state.raw_value === 'start'"  type="object" string="Status :Started" name="desc_pop_stop"   class="oe_kanban_status oe_kanban_status_green"></a>
+	                        <a  type="object" string="Task Summary" name="check_work_summary" class="oe_e oe_star_on">2</a>
+	                    </t>
+	                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+	                </div>
+        		</xpath>
+            </field>
+        </record>
+            
+		<!-- color coding if Kanban view -->
+ 		<!-- Color coding of project tree view -->
+ 		<record id="color_coding_project_tree_view" model="ir.ui.view">
+            <field name="name">project.issues.fields</field>
+            <field name="model">project.project</field>
+			<field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+				<xpath expr = "/tree" position="attributes">
+					<attribute name="colors">red:effective_hours > planned_hours;red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')</attribute>
+				</xpath>            
+            </field>
+        </record>
+
+ 		<!-- Changing project issue behaviuor -->
+ 		<record id="change_project_issues_behaviour_add_fields" model="ir.ui.view">
+            <field name="name">project.issues.fields</field>
+            <field name="model">project.issue</field>
+			<field name="inherit_id" ref="project_issue.project_issue_form_view"/>
+            <field name="arch" type="xml">
+				<xpath expr="/form/sheet[@string='Issue']/group/group/field[@name='email_from']" position="after">
+					<field name="is_send_mail" attrs="{'readonly':[('id','!=',False)]}" />
+					<field name="id" invisible="1"/>
+				</xpath>            
+            </field>
+        </record>    
+        
+		<!-- Changing project task behavior for project managers-->
+		<record id="change_project_task_behaviour_add_fields" model="ir.ui.view">
+            <field name="name">Project Task Behavior add fields</field>
+            <field name="model">project.task</field>
+            <field name="groups_id" eval="[(6, 0, [ref('project.group_project_manager') ])]"/>
+			<field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+				<xpath expr = "/form/sheet/notebook/page[@string='Extra Info']" position = "after">
+					<page string = "Work Summary">
+						<field name = "id" invisible = "1"/>
+						<field name="timer_lines" nolabel="1">
+							<tree string="Project Timer Lines Recorder" create="0" delete="0" edit="0">
+								<field name="started_by"/>
+								<field name="start_time"/>
+								<field name="stop_time"/>
+								<field name="difference_time" widget="float_time"/>						
+							</tree>
+						</field>
+					</page>
+				</xpath>
+				<xpath expr = "/form/sheet/h1" position="before">
+					<header>
+	                	<field name="timer_state" widget="statusbar" 
+    		            	statusbar_visible="stop,start"  readonly="1"/>
+            			<button name="desc_pop_start" class = "oe_right" type="object" string="Start Timer" attrs="{'invisible':[('timer_state','=','start')]}"/>
+						<button name="desc_pop_stop" class = "oe_right" type="object" string="Stop Timer" attrs="{'invisible':[('timer_state','=','stop')]}"/>
+						<button name="check_work_summary" class = "oe_right" type="object" string="Check task Summary" />	
+					</header>
+				</xpath>
+				<xpath expr="/form/sheet/group/group/field[@name='project_id']" position = "after">
+                   <field name="assign_to_choice" required="1" on_change="onchange_choice(assign_to_choice)" groups="project.group_project_manager"/>
+                   <field name="department_id" on_change="onchange_department(assign_to_choice,user_id,department_id)" groups="project.group_project_manager" attrs="{'required':[('assign_to_choice','=','department')],'invisible':[('assign_to_choice','in',['users',False])]}" />
+				</xpath>
+				<xpath expr = "/form/sheet/group/group/field[@name='user_id']" position = "attributes">
+					<attribute name="attrs">{'required':[('assign_to_choice','=','users')]}</attribute>
+					<attribute name="string">Assigned To/Volunteer</attribute>
+					<attribute name="on_change">onchange_dept_check(assign_to_choice,user_id,department_id)</attribute>
+				</xpath>            	
+				<xpath expr="/form/header" position = "after">
+					
+					<widget type="multiplication"/>
+					<field name="id" invisible="1"/>
+				</xpath>            	
+				<xpath expr="/form/header" position = "inside">
+					<button string="Send Mail" name="create_mail" type = "object" attrs = "{'invisible':[('id','=',False)]}" context = "{'button':True}" />
+				</xpath>            	
+            </field>
+        </record>
+        
+		<!-- Changing project task behaviuor for project users -->
+        <record id="view_task_form2_users" model="ir.ui.view">
+            <field name="name">project.task.form</field>
+            <field name="model">project.task</field>
+            <field name="groups_id" eval="[(6, 0, [ref('project.group_project_user') ])]"/>
+            <field name="arch" type="xml">
+                <form string="Project" version="7.0">
+					<header>
+						<button name="assign_me" string = "Assign me the task" attrs = "{'invisible':[('user_id','!=',False)]}" type="object"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"
+                            options="{'fold_field': 'fold'}"/>
+					</header>
+                    <sheet string="Task">
+					<header>
+	                	<field name="timer_state" widget="statusbar" 
+    		            	statusbar_visible="stop,start"  readonly="1"/>
+            			<button name="desc_pop_start" class = "oe_right" type="object" string="Start Timer" attrs="{'invisible':[('timer_state','=','start')]}"/>
+						<button name="desc_pop_stop" class = "oe_right" type="object" string="Stop Timer" attrs="{'invisible':[('timer_state','=','stop')]}"/>
+						<button name="check_work_summary" class = "oe_right" type="object" string="Check task Summary" />	
+					</header>
+                    <h1>
+                    	<widget type="multiplication"/>
+                        <field name="name" placeholder="Task summary..." readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                        	<field name = "id" invisible = "1"/>
+                            <!--  <field name="state" />-->
+                            <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}" readonly="1"/>
+                           	<field name="user_id" readonly="1" options='{"no_open": True}'/>
+                            <field name="planned_hours" widget="float_time"
+                                    groups="project.group_time_work_estimation_tasks"
+                                    on_change="onchange_planned(planned_hours, effective_hours)" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="date_deadline" readonly="1"/>
+                            <field name="categ_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="progress" widget="progressbar" 
+                                groups="project.group_time_work_estimation_tasks"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"  placeholder="Add a Description..."/>
+                            <field name="work_ids" groups="project.group_tasks_work_on_tasks">
+                                <tree string="Task Work" editable="top">
+                                    <field name="name"/>
+                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </tree>
+                            </field>
+                            <group>
+                             <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
+                                <field name="effective_hours" widget="float_time" readonly="1"/>
+                                <label for="remaining_hours" string="Remaining" readonly="1" groups="project.group_time_work_estimation_tasks"/>
+                                <div>
+                                    <field name="remaining_hours" widget="float_time" readonly="1" groups="project.group_time_work_estimation_tasks"/>
+                                </div>
+                                <field name="total_hours" widget="float_time" readonly="1" class="oe_subtotal_footer_separator"/>
+                             </group>
+                            </group>
+                            <div class="oe_clear"/>
+                        </page>
+						<page string = "Work Summary">
+							<field name="timer_lines" nolabel="1">
+								<tree string="Project Timer Lines Recorder" create="0" delete="0" edit="0">
+									<field name="started_by"/>
+									<field name="start_time"/>
+									<field name="stop_time"/>
+									<field name="difference_time" widget="float_time"/>						
+								</tree>
+							</field>
+						</page>
+                    </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>                        
+						<field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="project.action_view_task" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new task.
+              </p><p>
+                OpenERP's project management allows you to manage the pipeline
+                of tasks in order to get things done efficiently. You can
+                track progress, discuss on tasks, attach documents, etc.
+              </p>
+            </field>
+        </record>
+ 
+        <menuitem action="project.action_view_task" id="project.menu_action_view_task" parent="project.menu_project_management" sequence="5" groups="project.group_project_manager"/>
+        
+        <record id="project.open_view_task_list_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="project.action_view_task"/>
+        </record>
+        <record id="project.open_view_task_list_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="project.action_view_task"/>
+        </record>
+        <record id="open_view_task_list_form2" model="ir.actions.act_window.view">
+            <field name="sequence" eval = "20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref ="project.view_task_form2"/>
+            <field name="act_window_id" ref="project.action_view_task"/>
+        </record>
+ 
+        <record id="custom_action_view_task_user" model="ir.actions.act_window">
+            <field name="name">Track Tasks &amp; Progress</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new task.
+              </p><p>
+                OpenERP's project management allows you to manage the pipeline
+                of tasks in order to get things done efficiently. You can
+                track progress, discuss on tasks, attach documents, etc.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="custom_action_view_task_user"  id="menu_action_view_task_custom_user" parent="project.menu_project_management" sequence="5" groups="project.group_project_user"/>
+        
+        <record id="open_view_task_list_kanban_custom" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="custom_action_view_task_user"/>
+        </record>
+        <record id="open_view_task_list_tree_custom" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="custom_action_view_task_user"/>
+        </record>
+        <record id="open_view_task_list_form2_user" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref ="view_task_form2_users"/>
+            <field name="act_window_id" ref="custom_action_view_task_user"/>
+        </record>
+
+		<!-- Changing the project.project gantt view -->
+       <record id="view_project_project_gantt_modified" model="ir.ui.view">
+            <field name="name">project.project.gantt</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <gantt  date_start="date_start" date_stop="date" color="user_id" string="Projects"/>
+            </field>
+        </record>
+		<!--  Attaching the new gantt view to the action -->
+        <record id="project.open_view_project_all" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">kanban,tree,form,gantt</field>
+            <field name="view_id" ref="project.view_project_kanban"/>
+            <field name="search_view_id" ref="project.view_project_project_filter"/>
+            <field name="context">{'search_default_Current': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to start a new project.
+                </p><p>
+                  Projects are used to organize your activities; plan
+                  tasks, track issues, invoice timesheets. You can define
+                  internal projects (R&amp;D, Improve Sales Process),
+                  private projects (My Todos) or customer ones.
+                </p><p>
+                  You will be able collaborate with internal users on
+                  projects or invite customers to share your activities.
+                </p>
+            </field>
+        </record>
+        
+        <record id="attaching_tree_view_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="project.view_project"/>
+            <field name="act_window_id" ref="project.open_view_project_all"/>
+        </record>
+        <record id="attaching_gantt_view_action" model="ir.actions.act_window.view">
+            <field name="view_mode">gantt</field>
+            <field name="view_id" ref="view_project_project_gantt_modified"/>
+            <field name="act_window_id" ref="project.open_view_project_all"/>
+        </record>
+        <record id="attaching_form_view_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="project.edit_project"/>
+            <field name="act_window_id" ref="project.open_view_project_all"/>
+        </record>
+        
+        
+        <menuitem action="project.open_view_project_all" id="project.menu_projects" name="Projects" parent="project.menu_project_management" sequence="1"/>
+        
+        
+        <!-- Adding fields and customizing project form view -->
+		<record id="project_view_modifications" model="ir.ui.view">
+            <field name="name">Project Form View</field>
+            <field name="model">project.project</field>
+			<field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+<!--            	<xpath expr="/form/sheet/notebook/page[@string='Other Info']/group[@string='Administration']/field[@name='resource_calendar_id']" position="attributes">
+            		<attribute name="required">1</attribute>
+            	</xpath> -->
+            	<xpath expr="/form/sheet/group" position = "after">
+<group>            		
+<field name="is_send_mail" attrs="{'readonly':[('id','!=',False)]}"/></group>
+            		<field name="id" invisible="1"/>
+            	</xpath>
+			</field>
+		</record>
+		
+<!--  		<record id="change_button_task_project" model="ir.ui.view">
+            <field name="name">change button task project</field>
+            <field name="model">project.project</field>
+			<field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+				<xpath expr = "/form/sheet/div[@name='buttons']/button[@string='Tasks']" position="attributes">
+					<attribute name="groups"
+				</xpath>
+            </field>
+        </record> -->
+		
+	</data>
+</openerp>
