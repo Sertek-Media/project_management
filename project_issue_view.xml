@@ -10,31 +10,30 @@
 				<field name="priority" position="after">
         			<field name="timer_state"/>				
 				</field>
-        		<xpath expr = "//div[contains(@class, 'oe_kanban_footer_left')]" position="replace" >
-                   <field name="categ_ids"/>
+        		<xpath expr = "//div[contains(@class, 'oe_kanban_bottom_right')]" position="replace" >
                    <div class="oe_right">
-                       <span class="oe_kanban_highlight" groups="base.group_user">
-                           <a t-if="record.timer_state.raw_value === 'stop'" type="object" string="Status: Stop" name="desc_pop_start" class="oe_kanban_status"> </a>
-                           <a t-if="record.timer_state.raw_value === 'start'" type="object" string="Status: Start" name="desc_pop_stop" class="oe_kanban_status oe_kanban_status_green"> </a>
-                           <a  type="object" string="Issue Summary" name="check_work_summary" class="oe_e oe_star_on">2</a>
-                           <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                           <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
-                              <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                           </a>
-                           <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
-                              <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                           </a>
-                           <a type="object" name="set_priority" args="['2']" title="High Priority">
-                              <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                           </a>
-                           <a type="object" name="set_priority" args="['1']" title="Highest Priority">
-                              <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                           </a>
+                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+   	                       <span class="oe_kanban_highlight" groups="base.group_user">
+								<div class="pull-left" groups="base.group_user">
+							    	<a t-if="record.timer_state.raw_value === 'stop'" type="object" string="Status: Stop" name="desc_pop_start" class="oe_kanban_status"> </a>
+	                           		<a t-if="record.timer_state.raw_value === 'start'" type="object" string="Status: Start" name="desc_pop_stop" class="oe_kanban_status oe_kanban_status_green"> </a>
+	                           		<a type="object" string="Issue Summary" name="check_work_summary" class="oe_e oe_star_on">3</a>
+	                           		<field name="priority" widget="priority"/>
+								</div>
+
+	<!--                           <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
+	                              <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+	                           </a>
+	                           <a type="object" name="set_priority" args="['2']" title="High Priority">
+	                              <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+	                           </a>
+	                           <a type="object" name="set_priority" args="['1']" title="Highest Priority">
+	                              <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+	                           </a> -->
                        </span>
                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
                            <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
                        </t>
-                       <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                    </div>
         		</xpath>
             </field>
@@ -49,11 +48,14 @@
 					<header>
 	                	<field name="timer_state" widget="statusbar" 
     		            	statusbar_visible="stop,start"  readonly="1"/>
-            			<button name="desc_pop_start" class = "oe_right" type="object" string="Start Timer" attrs="{'invisible':[('timer_state','=','start')]}"/>
-						<button name="desc_pop_stop" class = "oe_right" type="object" string="Stop Timer" attrs="{'invisible':[('timer_state','in',['stop',False])]}"/>
-						<button name="check_work_summary" class = "oe_right" type="object" string="Check task Summary" />	
 					</header>
+					<div class = "oe_right">
+	        			<button name="desc_pop_start" class="oe_inline oe_stat_button oe_start_button" type="object" icon="fa-list-alt" string="Start Timer" attrs="{'invisible':[('timer_state','=','start')]}"/>
+						<button name="desc_pop_stop" class="oe_inline oe_stat_button oe_start_button" icon="fa-list-alt" type="object" string="Stop Timer" attrs="{'invisible':[('timer_state','in',['stop',False])]}"/>
+						<button name="check_work_summary" class="oe_inline oe_stat_button oe_start_button" icon="fa-list-alt" type="object" string="Task Summary" />						
+					</div>	
 				</xpath>
+
             	<xpath expr="/form/sheet/notebook/page[@string='Description']" position="after">
             		<page string="Issue Timer Summary">
             			<group>

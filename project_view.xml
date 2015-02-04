@@ -125,10 +125,13 @@
 					<header>
 	                	<field name="timer_state" widget="statusbar" 
     		            	statusbar_visible="stop,start"  readonly="1"/>
-            			<button name="desc_pop_start" class = "oe_right" type="object" string="Start Timer" attrs="{'invisible':[('timer_state','=','start')]}"/>
-						<button name="desc_pop_stop" class = "oe_right" type="object" string="Stop Timer" attrs="{'invisible':[('timer_state','=','stop')]}"/>
-						<button name="check_work_summary" class = "oe_right" type="object" string="Check task Summary" />	
 					</header>
+            		<div class = "oe_right">
+						<button string="Send Mail" class="oe_inline oe_stat_button" icon="fa-list-alt"  name="create_mail" type = "object" attrs = "{'invisible':[('id','=',False)]}" context = "{'button':True}" />
+	        			<button name="desc_pop_start" class="oe_inline oe_stat_button oe_start_button" icon="fa-list-alt"  type="object" string="Start Timer" attrs="{'invisible':[('timer_state','=','start')]}"/>
+						<button name="desc_pop_stop" class="oe_inline oe_stat_button oe_start_button" icon="fa-list-alt" type="object" string="Stop Timer" attrs="{'invisible':[('timer_state','=','stop')]}"/>
+						<button name="check_work_summary" class="oe_inline oe_stat_button oe_start_button" icon="fa-list-alt" type="object" string="Task Summary" />            			
+            		</div>
 				</xpath>
 				<xpath expr="/form/sheet/group/group/field[@name='project_id']" position = "after">
                    <field name="assign_to_choice" required="1" on_change="onchange_choice(assign_to_choice)" groups="project.group_project_manager"/>
@@ -143,9 +146,6 @@
 					
 					<widget type="multiplication"/>
 					<field name="id" invisible="1"/>
-				</xpath>            	
-				<xpath expr="/form/header" position = "inside">
-					<button string="Send Mail" name="create_mail" type = "object" attrs = "{'invisible':[('id','=',False)]}" context = "{'button':True}" />
 				</xpath>            	
             </field>
         </record>
