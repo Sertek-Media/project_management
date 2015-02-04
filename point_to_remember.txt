@@ -1,0 +1,62 @@
+1. Do not forget to relate a user to employee ("related user field in the employee form" )
+
+2. Do not forget to enter the project in the task form otherwise no mail will be sent to the customer.
+However if already done then the work around is to manually send the mail to the customer using the default template.
+
+3.Do not forget to enter the Customer Field in the project form otherwise again the mail will not be sent to the customer  
+4.The timer will not start if the user is not related to an employee or if the he/she has not sighned in
+5.Timer will not show any duration below 1 minute
+6.The employee who has started the task, only that employee or the administrator can close the task
+7.While signing out make sure all the tasks are closed
+8.The timer should be started only once the user has been assigned to the task
+9.Kanban view start and stop timer button
+10. A mail is dispatched after the project is created to the customer only if the customer has been mentioned in the project form
+
+
+Points to remember while installation of the module -
+
+* delete the access right of project.task as this module creates it's own access rights so delete the old one
+
+  settings --> groups --> project/user --> access rights
+
+* delete the Administrator from the Project/User group so that the "Track task & progress" menuitem is not shown in administrator
+
+* Installing sudo apt-get install python-easygui
+
+* While installing (issue for portal user) ---> goto groups ---> type portal in the serach field ---> now in the portal modify the record rule for partner---> remove the tick from "read" and put the tick on create,delete,write 
+* There will be a task rule created for the Employee........Just delete it ....because for the user i am saying only allow the message_follower_ids to view the task whereas the employee rule is allowing the user to see all the task  
+* delete the portal rule for sales order
+Timer functionality
+
+There will be many2one field with each task that will be referenced to an object having three fields -->
+1. Start Time
+2. End Time
+3. Difference
+
+The kanban view button will all the time add the row to this many2one field and there will be a button that will add the difference of all the rows
+Also do not let the user create a row if the user is not logged in 
+
+For this goto hr_attendance folder --> hr_attendance.py --> find the method 'attendance_action_change'
+
+He should only be allowed to start one task at a time
+Also add on/off timer button in the right top corner of the form view of the task
+If the user logouts then the task should be automatically stopped
+Also the user should not be allowed to start the task with out signining in
+
+Gantt View
+--------------
+Project form view ----> extra info tab ---> Gantt view according to start date and the end date fields
+if due date(Deadline)  is passed then the gantt view should highlight red ....so the done button should be pressed before the deadline else it is highlighted red in the gantt view
+starting date in the project.task gantt view is the problem.Orignially no problem but after installing dependency module something goes wrong with it
+
+Issues Gantt View
+------------------
+
+Things to do
+---------------
+create a record rule for project.issue.time.recorder allowing the users to edit on this object
+
+
+
+
+

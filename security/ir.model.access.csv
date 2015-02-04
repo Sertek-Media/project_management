@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_task,project.task,model_project_task,project.group_project_user,1,1,0,0
+access_project_task_time_recorder,project.task.time.recorder,model_project_task_time_recorder,project.group_project_user,1,1,1,1
+access_res_users,res.users.access,model_res_users,project.group_project_user,1,1,0,0

@@ -1,0 +1,18 @@
+		<!-- Adding Assign To field -->
+		<record id="project_management_assign_tos" model="ir.ui.view">
+			<field name="name">Assign To Fields</field>
+			<field name="model">project.task</field>
+			<field name="inherit_id" ref="project.view_task_form2"/>
+			<field name="arch" type="xml">
+				<xpath expr = "/form/sheet/group/group/field[@name='user_id']" position ="before">
+					<field name="assign_to_choice" required="1"/>
+				</xpath>
+				<xpath expr = "/form/sheet/group/group/field[@name='user_id']" position ="attributes">
+					<attribute name="attrs">{'readonly':[('state','in',['done', 'cancelled'])],'invisible':[('assign_to_choice','in',['department',False])]}</attribute>
+				</xpath>
+				<xpath expr = "/form/sheet/group/group/field[@name='user_id']" position ="before">
+					<field name="department_id" attrs="{'required':[('assign_to_choice','=','department')],'readonly':[('state','in',['done', 'cancelled'])],'invisible':[('assign_to_choice','in',['users',False])]}"/>
+				</xpath>
+			</field>
+		</record>
+

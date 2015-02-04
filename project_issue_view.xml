@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Changing project.issue kanban view-->
+		<record id="change_project_issue_kanban_view" model="ir.ui.view">
+            <field name="name">Project Issue Timer Functionality</field>
+            <field name="model">project.issue</field>
+			<field name="inherit_id" ref="project_issue.project_issue_kanban_view"/>
+            <field name="arch" type="xml">
+				<field name="priority" position="after">
+        			<field name="timer_state"/>				
+				</field>
+        		<xpath expr = "//div[contains(@class, 'oe_kanban_footer_left')]" position="replace" >
+                   <field name="categ_ids"/>
+                   <div class="oe_right">
+                       <span class="oe_kanban_highlight" groups="base.group_user">
+                           <a t-if="record.timer_state.raw_value === 'stop'" type="object" string="Status: Stop" name="desc_pop_start" class="oe_kanban_status"> </a>
+                           <a t-if="record.timer_state.raw_value === 'start'" type="object" string="Status: Start" name="desc_pop_stop" class="oe_kanban_status oe_kanban_status_green"> </a>
+                           <a  type="object" string="Issue Summary" name="check_work_summary" class="oe_e oe_star_on">2</a>
+                           <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                           <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
+                              <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                           </a>
+                           <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
+                              <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+                           </a>
+                           <a type="object" name="set_priority" args="['2']" title="High Priority">
+                              <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                           </a>
+                           <a type="object" name="set_priority" args="['1']" title="Highest Priority">
+                              <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                           </a>
+                       </span>
+                       <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
+                           <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
+                       </t>
+                       <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                   </div>
+        		</xpath>
+            </field>
+        </record>
+	
+		<record id="project_issue_timer" model="ir.ui.view">
+            <field name="name">Adding Timer Functionality</field>
+            <field name="model">project.issue</field>
+			<field name="inherit_id" ref="project_issue.project_issue_form_view"/>
+            <field name="arch" type="xml">
+				<xpath expr ="/form/sheet/label[@for='name']" position = "before">
+					<header>
+	                	<field name="timer_state" widget="statusbar" 
+    		            	statusbar_visible="stop,start"  readonly="1"/>
+            			<button name="desc_pop_start" class = "oe_right" type="object" string="Start Timer" attrs="{'invisible':[('timer_state','=','start')]}"/>
+						<button name="desc_pop_stop" class = "oe_right" type="object" string="Stop Timer" attrs="{'invisible':[('timer_state','in',['stop',False])]}"/>
+						<button name="check_work_summary" class = "oe_right" type="object" string="Check task Summary" />	
+					</header>
+				</xpath>
+            	<xpath expr="/form/sheet/notebook/page[@string='Description']" position="after">
+            		<page string="Issue Timer Summary">
+            			<group>
+            				<field name="timer_lines" nolabel="1" readonly="1">
+								<tree string="Project Timer Lines Recorder" create="0" delete="0" edit="0">
+									<field name="started_by"/>
+									<field name="start_time"/>
+									<field name="stop_time"/>
+									<field name="difference_time" widget="float_time"/>						
+								</tree>
+	            			</field>
+            			</group>
+            		</page>
+            	</xpath>
+            </field>
+        </record>
+	</data>
+</openerp>
