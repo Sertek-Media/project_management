@@ -400,6 +400,21 @@ class mail_compose_message(osv.TransientModel):
             values['body'] = values.pop('body_html')
         return {'value': values}
     
+class project_task_work(osv.osv):
+    _inherit = 'project.task.work'
+    
+    def unlink(self, cr, uid, ids, context=None):
+        toremove = {}
+        record_id = self.browse(cr, uid, ids, context=context)
+        for i in record_id:
+            if i.recorder_id:
+                self.pool.get('project.task.time.recorder').unlink(cr, uid, i.recorder_id.id, context=context)
+        super(project_task_work, self).unlink(cr, uid, ids, context=context)
+        return True
+    
+    _columns = {
+                'recorder_id':fields.many2one('project.task.time.recorder')
+                }
 
 class project_task_time_recorder(osv.osv):
     _name = 'project.task.time.recorder'
@@ -431,10 +446,11 @@ class project_task_time_recorder(osv.osv):
         return True
         
     _columns = {
+                'record_task_id':fields.many2one('project.task.work',ondelete='cascade'),
                 'connect':fields.many2one('project.task',invisible=True),
                 'start_time':fields.datetime('Start Time'),
                 'stop_time':fields.datetime('Stop Time'),
-                'difference_time':fields.float('Effective Hours Worked'),
+                'difference_time':fields.related('record_task_id','hours',type="float",string = 'Effective Hours Worked'),
                 'started_by':fields.many2one('res.users','Started By'),
                 }
 
@@ -621,6 +637,7 @@ class project_task(base_stage, osv.osv):
         
     def timer_state_stop(self,cr,uid,id,context):
         if context==None: context = {}
+        work_obj = self.pool.get('project.task.work')
         clock_state = self.read(cr,uid,id[0],['timer_state','last_work_summary_added_id'],context)
         user_start = self.read(cr,uid,id[0],['user_start'],context)
         user_working_obj = self.pool.get('res.users')
@@ -639,13 +656,15 @@ class project_task(base_stage, osv.osv):
                 start_time_datetime =  datetime.strptime(timer_lines_info.start_time, "%Y-%m-%d %H:%M:%S")
                 difference_time  = stop_time_datetime - start_time_datetime
                 difference_time_float = difference_time.days*24 +  float(difference_time.seconds)/3600
-                timer_obj.write(cr,uid,clock_state.get('last_work_summary_added_id',1),{'stop_time':stop_time,'difference_time':difference_time_float},context)
-                self.write(cr,uid,id,{'timer_state':'stop','work_ids':[(0,0,{
-                                                                  'name':context.get('desc','Work Summary'),
-                                                                  'hours':difference_time_float,
-                                                                  'date':stop_time,
-                                                                  'user_id':uid
-                                                                  })]},context)
+                task_work_id = work_obj.create(cr,uid,{ 'task_id':id[0],  
+                                          'name':context.get('desc','Work Summary'),
+                                          'hours':difference_time_float,
+                                          'date':stop_time,
+                                          'user_id':uid, 
+                                          'recorder_id':clock_state.get('last_work_summary_added_id',1)         
+                                        },context)
+                timer_obj.write(cr,uid,clock_state.get('last_work_summary_added_id',1),{'stop_time':stop_time,'record_task_id':task_work_id},context)
+                self.write(cr,uid,id,{'timer_state':'stop'},context)
             else:
                 raise osv.except_osv(('Warning'), ('The Employee who has started the task can close the task'))
         return  True
