@@ -56,65 +56,62 @@ class project_issue(osv.osv):
         id = super(project_issue,self).create(cr,uid,vals,context)
         if vals.get('is_send_mail',False) == True:
             context.update({'project_issue_custom_module':True})
-            result = self.dispatch_mail(cr,uid,id,context)
+            result = self.dispatch_mail(cr,uid,id,vals.get('user_id',False),context)
             if result == False:
                 print("No mail was dispatched to the employee probably due to configuration problems\n1. E-mail ID for the employee is missing\n2. The 'Assigned To' field in the issue form is missing", "Error")
         return id
     
-    def dispatch_mail(self,cr,uid,id,context):
+    def dispatch_mail(self,cr,uid,id,user_id,context):
+        info = self.pool.get('res.users').read(cr,uid,user_id or uid,['lang','tz'],context)
+        if type(id) == type([]): id = id[0]
+        if context == None: context = {}
+        context.update({'lang':str(info.get('lang',False) or ''),
+                        'tz':str(info.get('tz',False) or ''),
+                        'active_ids':[id],
+                        'active_id':id,
+                        'uid':uid,
+                        'active_model':'project.issue',
+                        }) 
+        ir_model_data = self.pool.get('ir.model.data') 
         try:
-            info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
-            if type(id) == type([]): id = id[0]
-            if context == None: context = {}
-            context.update({'lang':str(info.get('lang',False) or ''),
-                            'tz':str(info.get('tz',False) or ''),
-                            'active_ids':[id],
-                            'active_id':id,
-                            'uid':uid,
-                            'active_model':'project.issue',
-                            }) 
-            ir_model_data = self.pool.get('ir.model.data') 
-            try:
-                template_id = ir_model_data.get_object_reference(cr, uid, 'jjuice', 'attribute_vol')[1]
-            except ValueError:
-                template_id = False
-            try:
-                compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-            except ValueError:
-                compose_form_id = False 
-            ctx = context
+            template_id = ir_model_data.get_object_reference(cr, uid, 'project_management', 'email_template_edi_project_management_employee_issue')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False 
+        ctx = context
+        ctx.update({
+            'default_model': 'project.issue',
+            'default_res_id': id,
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',  
+            'custom_module':True,
+        })
+        context = ctx
+        wizard_object = self.pool.get('mail.compose.message')
+        brw_obj = self.browse(cr,uid,id,context)
+        if brw_obj.user_id and brw_obj.user_id.email:
+            mail_employee = brw_obj.user_id.partner_id.id
+            wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_employee)],
+                                                                             'template_id':template_id,
+                                                                              'composition_mode':'comment',
+                                                                              'res_id':id,
+                                                                              },context)
+            values = wizard_object.onchange_template_id(cr, uid, id, template_id,'comment','project.issue',id, context=None)
+            wizard_object.write(cr,uid,wizard_id,values['value'],context)
             ctx.update({
-                'default_model': 'project.issue',
-                'default_res_id': id,
-                'default_use_template': bool(template_id),
-                'default_template_id': template_id,
-                'default_composition_mode': 'comment',  
-                'compose_form_id':compose_form_id,
-                'custom_module':True,
-            })
-            context = ctx
-            wizard_object = self.pool.get('mail.compose.message')
-            brw_obj = self.browse(cr,uid,id,context)
-            if brw_obj.user_id and brw_obj.user_id.email:
-                mail_employee = brw_obj.user_id.partner_id.id
-                wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_employee)],
-                                                                                 'template_id':template_id,
-                                                                                  'composition_mode':'comment',
-                                                                                  'res_id':id,
-                                                                                  },context)
-                values = wizard_object.onchange_template_id(cr, uid, id, template_id,'comment','project.issue',id, context=None)
-                wizard_object.write(cr,uid,wizard_id,values['value'],context)
-                ctx.update({
-                            'wizard_id':wizard_id,
-                            })
-                wizard_id_list = []
-                wizard_id_list.append(wizard_id) 
-                wizard_object.send_mail(cr,uid,wizard_id_list,context)
-                return True
-            else:
-                return False
-        except:
-            return False                
+                        'wizard_id':wizard_id,
+                        })
+            wizard_id_list = []
+            wizard_id_list.append(wizard_id) 
+            wizard_object.send_mail(cr,uid,wizard_id_list,context)
+            return True
+        else:
+            return False
+        return False                
     
     _defaults = {
                  'is_send_mail':True,

@@ -25,10 +25,17 @@ class project_issue(osv.osv):
     _inherit = "project.issue"
     _description = "Portal Issue default user"
 
-    def case_close(self,cr,uid,ids,context):
-        info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
+    def write(self,cr,uid,ids,vals,context=None):
+        if vals.get('stage_id'):
+            done_state = self.pool.get('project.task.type').read(cr,uid,vals['stage_id'],['done_state'],context)
+            if done_state.get('done_state',False):
+                self.case_close(cr,uid,ids,context)
+        return super(project_issue,self).write(cr,uid,ids,vals,context)
+        
+    def case_close(self,cr,uid,ids,context=None):
         if type(ids) == type([]): id = ids[0]
         if context == None: context = {}
+        info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
         context.update({'lang':str(info.get('lang',False) or ''),
                         'tz':str(info.get('tz',False) or ''),
                         'active_uid':id,
@@ -50,7 +57,7 @@ class project_issue(osv.osv):
             'default_res_id': id,
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
-            'default_composition_mode': 'mass_mail',  
+            'default_composition_mode': 'comment',  
             'compose_form_id':compose_form_id,
             'custom_module':True,
         })
@@ -62,7 +69,7 @@ class project_issue(osv.osv):
                 mail_customer = brw_obj.project_id.partner_id.id
                 wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_customer)],
                                                                                  'template_id':template_id,
-                                                                                  'composition_mode':'mass_mail',
+                                                                                  'composition_mode':'comment',
                                                                                   'res_id':id
                                                                                   },context)
                 values = wizard_object.onchange_template_id(cr, uid, id, template_id,'comment','project.issue',id, context=None)
@@ -77,8 +84,8 @@ class project_issue(osv.osv):
                 e.msgbox("No mail was dispatched because the project does not have any customer", "Error")
         else:
             e.msgbox("No mail was dispatched because no project was mentioned on the issue", "Error")
-        return super(project_issue,self).case_close(cr,uid,ids,context)
-        
+        return True
+    
     def check_work_summary(self,cr,uid,ids,context):
         for id in ids:
             total = 0.00
