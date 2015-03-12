@@ -1,6 +1,22 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
+        <record id="mt_project_state" model="mail.message.subtype">
+            <field name="name">State Changed</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="True"/>
+            <field name = "hidden" eval = "False"/>
+            <field name="description">Project state changed</field>
+        </record>
+            
+        <record id="project.mt_task_stage" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="True"/>
+            <field name="description">Task stage changed</field>
+        </record>
+    </data>
+    <data>
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
             <field name="name">Email Templates</field>
@@ -24,7 +40,7 @@
             <field name="email_recipients"></field>
             <field name="model_id" ref="project_management.model_project_task"/>
             <field name="auto_delete" eval="True"/>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">${object.project_id.user_id.lang}</field>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 
@@ -53,12 +69,12 @@
             <field name="email_recipients"></field>
             <field name="model_id" ref="project_management.model_project_task"/>
             <field name="auto_delete" eval="True"/>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">${object.partner_id.lang or object.project_id.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
 
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 	
-    <p>Dear ${object.project_id.partner_id.name or ''},</p>
+    <p>Dear ${object.project_id.partner_id.name or object.partner_id.name or ''},</p>
     
     <p>New task is assigned to your project.</p>
     <p>Here are the Task details:</p>
@@ -83,11 +99,11 @@
             <field name="email_recipients"></field>
             <field name="model_id" ref="project_management.model_project_project"/>
             <field name="auto_delete" eval="True"/>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">${object.partner_id.lang }</field>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 	
-    <p>Dear ${object.partner_id.name or ''} </p>
+    <p>Dear ${object.project_id.partner_id.name or object.partner_id.name or ''} </p>
     
     <p>We have assigned new project to you or your company.</p>
     <p>Here are the Project details:</p>
@@ -138,7 +154,7 @@
             <field name="email_recipients"></field>
             <field name="model_id" ref="project_management.model_project_task"/>
             <field name="auto_delete" eval="True"/>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="lang">${object.partner_id.lang or object.project_id.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 	

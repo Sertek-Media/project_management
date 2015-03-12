@@ -122,10 +122,14 @@ class project_issue(osv.osv):
 class project_project(osv.osv):
     _inherit = "project.project"
     _description = "Adding Email Functionality"
-    
+    _track = {
+                'state': {
+                    # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+                    'project_management.mt_project_state': lambda self, cr, uid, obj, ctx=None: True,
+                },              
+              }
     def set_done(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
-        task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
         info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
         if type(ids) == type([]): id = ids[0]
         if context == None: context = {}
@@ -175,7 +179,6 @@ class project_project(osv.osv):
             wizard_object.send_mail(cr,uid,wizard_id_list,context)
         else:
             print("No mail was dispatched because the project does not have any customer", "Error")
-        task_obj.case_close(cr, uid, task_ids, context=context)
         return self.write(cr, uid, ids, {'state':'close'}, context=context)
 
     def dispatch_mail(self,cr,uid,id,context):
@@ -311,10 +314,12 @@ class project_project(osv.osv):
     
     
     
-    def create(self,cr,uid,vals,context=None):
+    def create(self,cr,uid,vals,context=None): #shivam
         
         self.check_user(cr, uid, uid, context)
-        id = super(project.project_project,self).create(cr,uid,vals,context)
+        if vals.get('partner_id',False):
+            vals['message_follower_ids'] = [vals.get('partner_id')]
+        id = super(project_project,self).create(cr,uid,vals,context)
         if vals.get('is_send_mail',False) == True:
             context.update({'project_custom_module':True})
             result = self.dispatch_mail(cr,uid,id,context)
@@ -328,6 +333,13 @@ class project_project(osv.osv):
                  'privacy_visibility':'public',
                  }
     _columns = {
+                'state': fields.selection([('template', 'Template'),
+                           ('draft','New'),
+                           ('open','In Progress'),
+                           ('cancelled', 'Cancelled'),
+                           ('pending','Pending'),
+                           ('close','Closed')],
+                          'Status',track_visibility='onchange', required=True, copy=False),
                 'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (
@@ -563,7 +575,7 @@ class project_task( osv.osv):
                print ("No mail was dispatched because the project does not have any customer", "Error")
         else:
             print ("No mail was dispatched because no project was mentioned on the task", "Error")
-        return self.do_close(cr, uid, [task_id], context=context)
+        return True
     
     def check_work_summary(self,cr,uid,ids,context):
         for id in ids:
@@ -744,6 +756,10 @@ class project_task( osv.osv):
         mail_employee = []
         if vals.get('partner_id',False):
             mail_employee.append(vals.get('partner_id',False))
+        elif vals.get('project_id',False):
+            partner_id_read = self.pool.get('project.project').read(cr,uid,vals.get('project_id'),['partner_id'],context)
+            if partner_id_read.get('partner_id'):
+                mail_employee.append(partner_id_read.get('partner_id',False)[0])                
         if vals.get('assign_to_choice',False) == 'department':
             vals['user_id'] = False
             if vals.get('department_id',False):
@@ -776,12 +792,15 @@ class project_task( osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('stage_id',False):
             for id in ids:
+                state_state = self.pool.get('project.task.type').read(cr,uid,vals.get('stage_id',False),['fold','done_state'],context)
                 timer_state = self.read(cr,uid,id,['timer_state','stage_id'],context)
                 if timer_state.get('timer_state',False) == "start":
-                    state_state = self.pool.get('project.task.type').read(cr,uid,vals.get('stage_id',False),['fold'],context)
                     if state_state.get('fold',False):
                         raise osv.except_osv(('Error'), ('A task can be folded only once the timer is stopped'))
-        
+                if state_state.get('done_state',False):
+                    self.action_close(cr,uid,[id],context)
+                    
+                ## Enter another else condition that calls a function to sent eh msg to the customer
         if vals.get('timer_state',False) :
             for id in ids:
                 timer_state = self.read(cr,uid,id,['stage_id'],context)
