@@ -779,8 +779,9 @@ class project_task( osv.osv):
         else:
             vals['department_id'] = False
             partner_id = self.pool.get('res.users').read(cr,uid,vals['user_id'],['partner_id'],context)
-            mail_employee.append(partner_id['partner_id'][0])
-            set(mail_employee)
+            if partner_id:
+		    mail_employee.append(partner_id['partner_id'][0])
+		    set(mail_employee)
         vals['message_follower_ids'] = mail_employee
         task_id = super(project.task, self).create(cr, uid, vals, context=create_context)
         self._store_history(cr, uid, [task_id], context=context)
