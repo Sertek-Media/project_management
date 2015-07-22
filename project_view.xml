@@ -418,27 +418,17 @@
             <field name="model">project.project</field>
 			<field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-<!--            	<xpath expr="/form/sheet/notebook/page[@string='Other Info']/group[@string='Administration']/field[@name='resource_calendar_id']" position="attributes">
-            		<attribute name="required">1</attribute>
-            	</xpath> -->
+            	<xpath expr = "/form/sheet/div[@name = 'buttons']" position = "inside">
+            		<button class="oe_inline oe_stat_button" string = "Notify Customer" name="dispatch_mail" type="object" icon="fa-files-o" />
+            	</xpath>
             	<xpath expr="/form/sheet/group" position = "after">
-<group>            		
-<field name="is_send_mail" attrs="{'readonly':[('id','!=',False)]}"/></group>
-            		<field name="id" invisible="1"/>
+				<group>            		
+					<field name="is_send_mail" attrs="{'readonly':[('id','!=',False)]}"/>
+					<field name = "is_send_mail_contract" />
+				</group>
+           		<field name="id" invisible="1"/>
             	</xpath>
 			</field>
 		</record>
-		
-<!--  		<record id="change_button_task_project" model="ir.ui.view">
-            <field name="name">change button task project</field>
-            <field name="model">project.project</field>
-			<field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-				<xpath expr = "/form/sheet/div[@name='buttons']/button[@string='Tasks']" position="attributes">
-					<attribute name="groups"
-				</xpath>
-            </field>
-        </record> -->
-		
 	</data>
 </openerp>

@@ -1,0 +1,14 @@
+<openerp>
+	<data>
+		<record id ="account_analytic_send_mail_field" model ="ir.ui.view">
+			<field name = "name">Adding fields</field>
+			<field name = "model">account.analytic.account</field>
+			<field name = "inherit_id" ref="analytic.view_account_analytic_account_form"/>
+			<field name = "arch" type="xml">
+				<xpath  expr = "/form/sheet/group[@name='main']/group/field[@name='manager_id']" position ="after">
+					<field name = "is_send_mail" />
+				</xpath>			
+			</field>
+		</record>
+	</data>
+</openerp>

@@ -51,7 +51,8 @@ Install the modules
              'portal_view.xml','res_users_view.xml',
              'project_issue_view.xml',
              'wizard/description_pop_view.xml',
-            'views/project.xml'
+             'views/project.xml',
+             'analytic_view.xml'
              
              ],
     'demo': [],

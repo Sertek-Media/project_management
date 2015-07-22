@@ -30,18 +30,16 @@ class account_analytic_account(osv.osv):
         return project_id
 
     def create(self, cr, uid, vals, context=None):
-            if context is None:
-                context = {}
-            if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
-                vals['child_ids'] = []
-            analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
-            project_id = self.project_create(cr, uid, analytic_account_id, vals, context=context)
-            if project_id:
-                list_id = []
-                list_id.append(project_id);
-                self.pool.get('project.project').dispatch_mail(cr,uid,project_id,context)
-            return analytic_account_id
- 
+        context = dict(context)
+        if context is None:
+            context = dict({})
+        context['is_send_mail'] = vals.get('is_send_mail',False)
+        if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
+            vals['child_ids'] = []
+        analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
+        project_id = self.project_create(cr, uid, analytic_account_id, vals, context=context)
+        return analytic_account_id
+    
 class project_issue(osv.osv):
     _name = 'project.issue'
     _inherit = ['project.issue','mail.thread','ir.needaction_mixin']
@@ -122,66 +120,74 @@ class project_issue(osv.osv):
 class project_project(osv.osv):
     _inherit = "project.project"
     _description = "Adding Email Functionality"
+    
+    def _check_state(self,cr,uid,obj,ctx=None):
+        if obj.state == 'open':
+            return False
+        else:
+            return True
     _track = {
                 'state': {
                     # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-                    'project_management.mt_project_state': lambda self, cr, uid, obj, ctx=None: True,
+                    'project_management.mt_project_state': _check_state,
                 },              
               }
     def set_done(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
         info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
         if type(ids) == type([]): id = ids[0]
-        if context == None: context = {}
-        context.update({'lang':str(info.get('lang',False) or ''),
-                        'tz':str(info.get('tz',False) or ''),
-                        'active_ids':[id],
-                        'active_id':id,
-                        'uid':uid,
-                        'active_model':'project.project',
-                        }) 
-        ir_model_data = self.pool.get('ir.model.data') 
-        try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'project_management', 'email_template_edi_project_management_project_close_message')[1]
-        except ValueError:
-            template_id = False
-        try:
-            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:
-            compose_form_id = False 
-        ctx = context
-        ctx.update({
-            'default_model': 'project.project',
-            'default_res_id': id,
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'mass_mail',  
-            'compose_form_id':compose_form_id,
-            'custom_module':True,
-        })
-        context = ctx
-        wizard_object = self.pool.get('mail.compose.message')
         brw_obj = self.browse(cr,uid,id,context)
-        if brw_obj.partner_id:
-            mail_customer = brw_obj.partner_id.id
-            wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_customer)],
-                                                                             'template_id':template_id,
-                                                                              'composition_mode':'mass_mail',
-                                                                              'res_id':id
-                                                                              },context)
-            values = wizard_object.onchange_template_id(cr, uid, id, template_id,'comment','project.project',id, context=None)
-            wizard_object.write(cr,uid,wizard_id,values['value'],context)
+        if context == None: context = {}
+        if brw_obj.is_send_mail_contract:
+            context.update({'lang':str(info.get('lang',False) or ''),
+                            'tz':str(info.get('tz',False) or ''),
+                            'active_ids':[id],
+                            'active_id':id,
+                            'uid':uid,
+                            'active_model':'project.project',
+                            }) 
+            ir_model_data = self.pool.get('ir.model.data') 
+            try:
+                template_id = ir_model_data.get_object_reference(cr, uid, 'project_management', 'email_template_edi_project_management_project_close_message')[1]
+            except ValueError:
+                template_id = False
+            try:
+                compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+            except ValueError:
+                compose_form_id = False 
+            ctx = context
             ctx.update({
-                        'wizard_id':wizard_id,
-                        })
-            wizard_id_list = []
-            wizard_id_list.append(wizard_id) 
-            wizard_object.send_mail(cr,uid,wizard_id_list,context)
-        else:
-            print("No mail was dispatched because the project does not have any customer", "Error")
+                'default_model': 'project.project',
+                'default_res_id': id,
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'default_composition_mode': 'mass_mail',  
+                'compose_form_id':compose_form_id,
+                'custom_module':True,
+            })
+            context = ctx
+            wizard_object = self.pool.get('mail.compose.message')
+            if brw_obj.partner_id:
+                mail_customer = brw_obj.partner_id.id
+                wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_customer)],
+                                                                                 'template_id':template_id,
+                                                                                  'composition_mode':'mass_mail',
+                                                                                  'res_id':id
+                                                                                  },context)
+                values = wizard_object.onchange_template_id(cr, uid, id, template_id,'comment','project.project',id, context=None)
+                wizard_object.write(cr,uid,wizard_id,values['value'],context)
+                ctx.update({
+                            'wizard_id':wizard_id,
+                            })
+                wizard_id_list = []
+                wizard_id_list.append(wizard_id) 
+                wizard_object.send_mail(cr,uid,wizard_id_list,context)
         return self.write(cr, uid, ids, {'state':'close'}, context=context)
+        
 
     def dispatch_mail(self,cr,uid,id,context):
+        if type(id) == type([]):id = id[0]
+        brw_obj = self.browse(cr,uid,id,context)
         try:
             info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
             if type(id) == type([]): id = id[0]
@@ -214,7 +220,6 @@ class project_project(osv.osv):
             })
             context = ctx
             wizard_object = self.pool.get('mail.compose.message')
-            brw_obj = self.browse(cr,uid,id,context)
             if brw_obj.partner_id and brw_obj.partner_id.email:
                 mail_customer = brw_obj.partner_id.id
                 wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_customer)],
@@ -230,14 +235,13 @@ class project_project(osv.osv):
                 wizard_id_list = []
                 wizard_id_list.append(wizard_id) 
                 wizard_object.send_mail(cr,uid,wizard_id_list,context)
-            else:
-                return False
+                return True
         except:
-            return False                
+            return False   
+        return False             
         
     def check_user(self,cr,uid,id,context):
         obj = self.pool.get('res.users')
-        print obj.read(cr,uid,uid,['group_ids'],context)
         return True
        
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
@@ -315,12 +319,11 @@ class project_project(osv.osv):
     
     
     def create(self,cr,uid,vals,context=None): #shivam
-        
         self.check_user(cr, uid, uid, context)
         if vals.get('partner_id',False):
             vals['message_follower_ids'] = [vals.get('partner_id')]
         id = super(project_project,self).create(cr,uid,vals,context)
-        if vals.get('is_send_mail',False) == True:
+        if (context.get('default_type',False) == 'contract' and context.get('is_send_mail',False))  or vals.get('is_send_mail',False):
             context.update({'project_custom_module':True})
             result = self.dispatch_mail(cr,uid,id,context)
             if result == False:
@@ -329,10 +332,15 @@ class project_project(osv.osv):
     
 
     _defaults = {
-                 'is_send_mail':True,
+                 'is_send_mail':False,
                  'privacy_visibility':'public',
                  }
     _columns = {
+                'is_send_mail_contract':fields.related('analytic_account_id','is_send_mail',
+                                                       type="boolean",string="Send Notifications to Customer",
+                                                       help="If unchecked then no mail is dispatched to the customer",
+                                                       ),
+                
                 'state': fields.selection([('template', 'Template'),
                            ('draft','New'),
                            ('open','In Progress'),
@@ -522,6 +530,7 @@ class project_task( osv.osv):
         if not task_id: return False
         info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
         if type(ids) == type([]): id = ids[0]
+        brw_obj = self.browse(cr,uid,id,context)
         if context == None: context = {}
         context.update({'lang':str(info.get('lang',False) or ''),
                         'tz':str(info.get('tz',False) or ''),
@@ -551,11 +560,9 @@ class project_task( osv.osv):
         })
         context = ctx
         wizard_object = self.pool.get('mail.compose.message')
-        brw_obj = self.browse(cr,uid,id,context)
         
         #Changes made @Karolis request
-        
-        if brw_obj.project_id :
+        if brw_obj.project_id and brw_obj.project_id.is_send_mail_contract:
             if brw_obj.project_id.partner_id:
                 mail_customer = brw_obj.project_id.partner_id.id
                 wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_customer)],
@@ -575,6 +582,7 @@ class project_task( osv.osv):
                print ("No mail was dispatched because the project does not have any customer", "Error")
         else:
             print ("No mail was dispatched because no project was mentioned on the task", "Error")
+        
         return True
     
     def check_work_summary(self,cr,uid,ids,context):
@@ -763,19 +771,9 @@ class project_task( osv.osv):
         if vals.get('assign_to_choice',False) == 'department':
             vals['user_id'] = False
             if vals.get('department_id',False):
-                employee_obj = self.pool.get('hr.employee')
-                employee_ids = employee_obj.search(cr,uid,[],offset=0, limit=None, order=None, context=None, count=False)
-                for i in employee_ids:
-                    hr_info = employee_obj.read(cr,uid,i,['department_id','user_id'],context)
-                    try:
-                        dept_id = hr_info.get('department_id',False)[0]
-                    except TypeError:
-                        continue
-                    if dept_id == vals['department_id']:
-                        if hr_info.get('user_id'):
-                            partner_id = self.pool.get('res.users').read(cr,uid,hr_info.get('user_id')[0],['partner_id'],context)
-                            mail_employee.append(partner_id['partner_id'][0])
-                set(mail_employee)
+                dept_manager = self.pool.get('hr.department').browse(cr,uid,vals.get('department_id',False),context)
+                if dept_manager.manager_id and dept_manager.manager_id.user_id and dept_manager.manager_id.user_id.partner_id:
+                    mail_employee.append(dept_manager.manager_id.user_id.partner_id.id)
         else:
             vals['department_id'] = False
             partner_id = self.pool.get('res.users').read(cr,uid,vals['user_id'],['partner_id'],context)
@@ -814,59 +812,59 @@ class project_task( osv.osv):
         return super(project_task,self).write(cr,uid,ids,vals,context=context)
     
     def customer_mail(self,cr,uid,id,context=None):
-        info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
-        if type(id) == type([]): id = id[0]
-        if context == None: context = {}
-        context.update({'lang':str(info.get('lang',False) or ''),
-                        'tz':str(info.get('tz',False) or ''),
-                        'active_ids':[id],
-                        'active_id':id,
-                        'uid':uid,
-                        'active_model':'project.task',
-                        }) 
-        ir_model_data = self.pool.get('ir.model.data') 
-        try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'project_management', 'email_template_edi_project_management_customer')[1]
-        except ValueError:
-            template_id = False
-        try:
-            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:
-            compose_form_id = False 
-        ctx = context
-        ctx.update({
-            'default_model': 'project.task',
-            'default_res_id': id,
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'mass_mail',  
-            'compose_form_id':compose_form_id,
-            'custom_module':True,
-        })
-        context = ctx
-        wizard_object = self.pool.get('mail.compose.message')
         brw_obj = self.browse(cr,uid,id,context)
-        if brw_obj.project_id :
-            if brw_obj.project_id.partner_id:
-                mail_customer = brw_obj.project_id.partner_id.id
-                wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_customer)],
-                                                                                 'template_id':template_id,
-                                                                                  'composition_mode':'mass_mail',
-                                                                                  'res_id':id
-                                                                                  },context)
-                values = wizard_object.onchange_template_id(cr, uid, id, template_id,'comment','project.task',id, context=None)
-                wizard_object.write(cr,uid,wizard_id,values['value'],context)
-                ctx.update({
-                            'wizard_id':wizard_id,
-                            })
-                wizard_id_list = []
-                wizard_id_list.append(wizard_id) 
-                wizard_object.send_mail(cr,uid,wizard_id_list,context)
-                return True
-            else:
-                return False
-        else:
-            return False
+        #send mail only if the sending notifications to customer is allowed
+        if brw_obj.project_id.is_send_mail_contract:
+            info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
+            if type(id) == type([]): id = id[0]
+            if context == None: context = {}
+            context.update({'lang':str(info.get('lang',False) or ''),
+                            'tz':str(info.get('tz',False) or ''),
+                            'active_ids':[id],
+                            'active_id':id,
+                            'uid':uid,
+                            'active_model':'project.task',
+                            }) 
+            ir_model_data = self.pool.get('ir.model.data') 
+            try:
+                template_id = ir_model_data.get_object_reference(cr, uid, 'project_management', 'email_template_edi_project_management_customer')[1]
+            except ValueError:
+                template_id = False
+            try:
+                compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+            except ValueError:
+                compose_form_id = False 
+            ctx = context
+            ctx.update({
+                'default_model': 'project.task',
+                'default_res_id': id,
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'default_composition_mode': 'mass_mail',  
+                'compose_form_id':compose_form_id,
+                'custom_module':True,
+            })
+            context = ctx
+            wizard_object = self.pool.get('mail.compose.message')
+            
+            if brw_obj.project_id :
+                if brw_obj.project_id.partner_id:
+                    mail_customer = brw_obj.project_id.partner_id.id
+                    wizard_id = wizard_object.create(cr,uid,{'partner_ids':[(4,mail_customer)],
+                                                                                     'template_id':template_id,
+                                                                                      'composition_mode':'mass_mail',
+                                                                                      'res_id':id
+                                                                                      },context)
+                    values = wizard_object.onchange_template_id(cr, uid, id, template_id,'comment','project.task',id, context=None)
+                    wizard_object.write(cr,uid,wizard_id,values['value'],context)
+                    ctx.update({
+                                'wizard_id':wizard_id,
+                                })
+                    wizard_id_list = []
+                    wizard_id_list.append(wizard_id) 
+                    wizard_object.send_mail(cr,uid,wizard_id_list,context)
+                    return True
+        return False
 
     def create_mail(self,cr,uid,id,context=None):
         info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
@@ -883,27 +881,17 @@ class project_task( osv.osv):
             vals = self.read(cr,uid,id,['department_id','assign_to_choice','user_id','manager_id'],context)
             manager_id = self.pool.get('res.users').browse(cr,uid,vals.get('manager_id',1)[0],context).partner_id.id
             customer_id = 0
-            if vals.get('partner_id',False):
-                customer_id = vals.get('partner_id',1)[0]
-            if vals['department_id'] != False:
-                department_id = vals['department_id'][0]
-            else:
-                department_id = False
+            department_id = False
+            
+            if vals.get('department_id',False):
+                department_id = vals.get('department_id')[0]
+            
             mail_employee = []
             employee_obj = self.pool.get('hr.employee')
             if str(vals.get('assign_to_choice',False)) == 'department' and vals.get('user_id',False) == False:
-                employee_ids = employee_obj.search(cr,uid,[],offset=0, limit=None, order=None, context=None, count=False)
-                for i in employee_ids:
-                    hr_info = employee_obj.read(cr,uid,i,['department_id','user_id'],context)
-                    try:
-                        dept_id = hr_info.get('department_id',False)[0]
-                    except TypeError:
-                        continue
-                    if dept_id == department_id:
-                        if hr_info.get('user_id'):
-                            partner_id = self.pool.get('res.users').read(cr,uid,hr_info.get('user_id')[0],['partner_id'],context)
-                            mail_employee.append(partner_id['partner_id'][0])
-                    
+                dept_obj = self.pool.get('hr.department').browse(cr,uid,department_id,context)
+                if dept_obj.manager_id and dept_obj.manager_id.user_id:
+                    mail_employee.append(dept_obj.manager_id.user_id.partner_id.id)  
             else:
                 user_id = self.read(cr,uid,id,['user_id'],context)
                 partner_id = self.pool.get('res.users').read(cr,uid,user_id['user_id'][0],['partner_id'],context)
