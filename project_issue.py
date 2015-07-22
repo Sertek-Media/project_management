@@ -36,7 +36,7 @@ class project_issue(osv.osv):
         
     def case_close(self,cr,uid,ids,context=None):
         if type(ids) == type([]): id = ids[0]
-        brw_obj = self.browse(cr,uid,SUPERUSER_ID,context)
+        brw_obj = self.browse(cr,SUPERUSER_ID,id,context)
         if brw_obj.project_id and brw_obj.project_id.is_send_mail_contract:
             if context == None: context = {}
             info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
