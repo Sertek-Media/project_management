@@ -6,6 +6,8 @@ from datetime import date
 import time
 from openerp.tools.translate import _
 from openerp.addons.project_issue import project_issue
+from openerp import SUPERUSER_ID
+
 class project_task_time_recorder(osv.osv):
     _name = 'project.issue.time.recorder'
     _description = 'Project issue Time Recorder Line'
@@ -34,7 +36,7 @@ class project_issue(osv.osv):
         
     def case_close(self,cr,uid,ids,context=None):
         if type(ids) == type([]): id = ids[0]
-        brw_obj = self.browse(cr,uid,id,context)
+        brw_obj = self.browse(cr,uid,SUPERUSER_ID,context)
         if brw_obj.project_id and brw_obj.project_id.is_send_mail_contract:
             if context == None: context = {}
             info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)

@@ -6,6 +6,7 @@ from openerp.addons.project_issue import project_issue
 from openerp.tools.translate import _
 from datetime import *
 import sys
+from openerp import SUPERUSER_ID 
 # from PyQt4.QtCore import *
 # import easygui as e
 
@@ -136,7 +137,7 @@ class project_project(osv.osv):
         task_obj = self.pool.get('project.task')
         info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
         if type(ids) == type([]): id = ids[0]
-        brw_obj = self.browse(cr,uid,id,context)
+        brw_obj = self.browse(cr,uid,SUPERUSER_ID,context)
         if context == None: context = {}
         if brw_obj.is_send_mail_contract:
             context.update({'lang':str(info.get('lang',False) or ''),
@@ -187,7 +188,7 @@ class project_project(osv.osv):
 
     def dispatch_mail(self,cr,uid,id,context):
         if type(id) == type([]):id = id[0]
-        brw_obj = self.browse(cr,uid,id,context)
+        brw_obj = self.browse(cr,uid,SUPERUSER_ID,context)
         try:
             info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
             if type(id) == type([]): id = id[0]
@@ -530,7 +531,7 @@ class project_task( osv.osv):
         if not task_id: return False
         info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
         if type(ids) == type([]): id = ids[0]
-        brw_obj = self.browse(cr,uid,id,context)
+        brw_obj = self.browse(cr,uid,SUPERUSER_ID,context)
         if context == None: context = {}
         context.update({'lang':str(info.get('lang',False) or ''),
                         'tz':str(info.get('tz',False) or ''),
@@ -812,7 +813,7 @@ class project_task( osv.osv):
         return super(project_task,self).write(cr,uid,ids,vals,context=context)
     
     def customer_mail(self,cr,uid,id,context=None):
-        brw_obj = self.browse(cr,uid,id,context)
+        brw_obj = self.browse(cr,uid,SUPERUSER_ID,context)
         #send mail only if the sending notifications to customer is allowed
         if brw_obj.project_id.is_send_mail_contract:
             info = self.pool.get('res.users').read(cr,uid,uid,['lang','tz'],context)
