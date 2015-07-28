@@ -41,16 +41,10 @@
 	        </field>
 	    </record>        
         
-    <record model="ir.actions.act_window" id="project_gtd.open_gtd_task">
-            <field name="name">My Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="search_view_id" ref="project_gtd.view_task_gtd_search"/>
-            <field name="context">{'set_editable':True,'set_visible':False,'gtd':True,'user_invisible':True}</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
-    </record>
-    <menuitem action="project_gtd.open_gtd_task" id="project_gtd.menu_open_gtd_timebox_tree" parent="project.menu_project_management" sequence="10"/>
+    
+
+    <menuitem action="project_gtd.open_gtd_all_tasks" id="project_gtd.menu_open_gtd_timebox_all_tree"
+        parent="project.menu_project_management" sequence="10" groups="project.group_project_manager"/>
         
         
 		<!-- Changing project.task kanban view-->
@@ -325,11 +319,24 @@
             <field name="act_window_id" ref="project.action_view_task"/>
         </record>
  
+        <record id="custom_project_search_view_filter_edit" model="ir.ui.view">
+            <field name="name">custom.project.search.view.filter.edit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/search/filter[@string='My Tasks']" position="attributes">
+                    <attribute name="name">my_task_filter</attribute>
+                </xpath>
+            </field>
+        </record>
+               
+
         <record id="custom_action_view_task_user" model="ir.actions.act_window">
             <field name="name">Track Tasks &amp; Progress</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
+            <field name="context">{'search_default_my_task_filter': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new task.
