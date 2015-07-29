@@ -1,6 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+
+        <record model="ir.ui.view" id="project.view_project_kanban">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey">
+                    <field name="effective_hours"/>
+                    <field name="planned_hours"/>
+                    <field name="name"/>
+                    <field name="members"/>
+                    <field name="use_tasks"/>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <field name="color"/>
+                    <field name="task_count"/>
+                    <field name="task_ids"/>
+                    <field name="alias_id"/>
+                    <field name="alias_name"/>
+                    <field name="alias_domain"/>
+                    <field name="doc_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                   			<t t-if = "record.effective_hours.raw_value > record.planned_hours.raw_value">
+								<t t-set = "color" t-value = "2"/>			
+							</t>
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(color)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Project Settings</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h4 class="text-center"><strong><field name="name"/></strong></h4>
+                                    <div class="text-center oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
+                                        <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                    </div>
+                                    <div class="oe_kanban_project_list">
+                                        <a t-if="record.use_tasks.raw_value" name="%(project.act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
+                                            <t t-raw="record.task_ids.raw_value.length"/> Tasks
+                                        </a>
+                                    </div>
+                                    <div class="oe_kanban_project_list">
+                                        <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <span groups="project.group_time_work_estimation_tasks">
+                                            <span class="oe_e">R</span>
+                                            <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
+                                        </span>
+                                        <span t-if="record.date.raw_value">
+                                            <span class="oe_e">N</span>
+                                            <field name="date"/>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_project_avatars">
+                                        <t t-foreach="record.members.raw_value.slice(0,11)" t-as="member">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+	
+	
 		<record id ="done_state_adds" model ="ir.ui.view">
 			<field name = "name">Adding fields</field>
 			<field name = "model">project.task.type</field>

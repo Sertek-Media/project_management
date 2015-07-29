@@ -246,41 +246,6 @@ class project_project(osv.osv):
         return True
        
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        uid = 1
-        child_parent = self._get_project_and_children(cr, uid, ids, context)
-        # compute planned_hours, total_hours, effective_hours specific to each project
-        cr.execute("""
-            SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
-                COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
-            FROM project_task WHERE project_id IN %s AND state <> 'cancelled'
-            GROUP BY project_id
-            """, (tuple(child_parent.keys()),))
-        # aggregate results into res
-        res = dict([(id, {'planned_hours':0.0,'total_hours':0.0,'effective_hours':0.0}) for id in ids])
-        for id, planned, total, effective in cr.fetchall():
-            # add the values specific to id to all parent projects of id in the result
-            while id:
-                if id in ids:
-                    res[id]['planned_hours'] += planned
-                    res[id]['total_hours'] += total
-                    res[id]['effective_hours'] += effective
-                id = child_parent[id]
-        # compute progress rates
-        for id in ids:
-            project_task_obj = self.pool.get('project.task')
-            #Total tasks of the current project
-            list_task_project = project_task_obj.search(cr,uid,[('project_id','=',id)],offset=0, limit=None, order=None, context=context, count=False)
-            list_task_project_done = project_task_obj.search(cr,uid,[('project_id','=',id),('stage_id.done_state','=',True)],offset=0, limit=None, order=None, context=context, count=False)
-            try:
-                res[id]['progress_rate'] = round((float(len(list_task_project_done))/len(list_task_project))*100, 2)
-            except ZeroDivisionError:
-                res[id]['progress_rate'] = 0.0
-        for id in ids:
-            if res[id]['effective_hours'] > res[id]['planned_hours']:
-                self.write(cr,uid,id,{'color':2},context)
-        return res
-
-    def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         child_parent = self._get_project_and_children(cr, uid, ids, context)
         # compute planned_hours, total_hours, effective_hours specific to each project
         cr.execute("""
@@ -312,9 +277,6 @@ class project_project(osv.osv):
                 res[id]['progress_rate'] = round((float(len(list_task_project_done))/len(list_task_project))*100, 2)
             except ZeroDivisionError:
                 res[id]['progress_rate'] = 0.0
-        for id in ids:
-            if res[id]['effective_hours'] > res[id]['planned_hours']:
-                self.write(cr,uid,id,{'color':2},context)
         return res
     
     
