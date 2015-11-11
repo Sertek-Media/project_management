@@ -505,7 +505,9 @@ class project_task_time_recorder(osv.osv):
         return True
         
     _columns = {
-                'record_task_id':fields.many2one('project.task.work',ondelete='cascade', required=True),
+#Changed to required==False due to errors when trying to start timer (gsp project)
+                #'record_task_id':fields.many2one('project.task.work',ondelete='cascade', required=True),
+                'record_task_id':fields.many2one('project.task.work',ondelete='cascade'),
                 'connect':fields.many2one('project.task',invisible=True),
                 'start_time':fields.datetime('Start Time'),
                 'stop_time':fields.datetime('Stop Time'),
@@ -763,6 +765,7 @@ class project_task( osv.osv):
         create_context = dict(context, mail_create_nolog=True)
 #if choice is department then first make user_id = False and the people belonging to the department to message_follower_ids
         mail_employee = []
+        if not vals.get('date_start',False):vals['date_start']=fields.datetime.now()
         if vals.get('partner_id',False):
             mail_employee.append(vals.get('partner_id',False))
         elif vals.get('project_id',False):
